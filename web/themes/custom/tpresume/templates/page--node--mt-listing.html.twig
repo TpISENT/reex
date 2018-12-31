@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * TpISENTResumes's theme implementation to display internal banner slider of Listing node.
+ */
+#}
+
+{% extends "page.html.twig" %}
+{% block internal_banner %}
+  {% if mt_lst_internal_banner|render %}
+    <div class="internal-banner-container">
+      {{ mt_lst_internal_banner }}
+      <div class="internal-banner">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              {{ mt_lst_category }}
+              <div class="page-title">
+                {{ node.label }}
+              </div>
+              {% if mt_lst_address|render or mt_lst_city|render %}
+                <div class="address-container">
+                  <i class="fa fa-map-marker-alt"></i>
+                  {{ mt_lst_address }}
+                  {{ mt_lst_city }}
+                </div>
+              {% endif %}
+              {% if node.field_mt_lst_location.value %}
+                {{ attach_library('tpresume/map-link-scroll') }}
+                <div class="map-link">
+                  <i class="fa fa-map"></i>
+                  <a href="#" class="map-link--smooth-scroll">{% trans %}Show Map{% endtrans %}</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

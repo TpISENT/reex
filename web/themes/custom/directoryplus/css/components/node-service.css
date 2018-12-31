@@ -1,0 +1,135 @@
+/**
+ * @file
+ * Visual styles for Directory+'s service content type.
+ */
+.node--type-mt-service .node__header {
+  padding: 0;
+}
+
+/*page title*/ 
+.layout-no-sidebars.page-node-type-mt-service .page-title {
+  text-align: center;
+}
+@media (min-width: 1200px) {
+  .layout-no-sidebars.page-node-type-mt-service .page-title {
+    font-size: 70px;
+  }
+}
+
+/*service content top*/
+.service-content-top{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  -ms-flex-pack: center!important;
+  justify-content: center!important;
+}
+.service-content-top-first,
+.service-content-top-second {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+@media (min-width: 992px) {
+  ..layout-no-sidebars .service-content-top-first {
+    -ms-flex: 0 0 66.666667%;
+    flex: 0 0 66.666667%;
+    max-width: 66.666667%;
+  }
+  .layout-no-sidebars .service-content-top-first + .service-content-top-second {
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+}
+
+/*body*/
+@media (min-width: 992px) {
+  .layout-no-sidebars.page-node-type-mt-service .field--name-field-mt-srv-body {
+    width: 66.6666667%;
+    margin: 0 auto;
+  }
+}
+
+/*subheader field*/
+.field--name-field-mt-srv-subheader-body {
+  font-size: 24px;
+  line-height: 1.5;
+}
+.field--name-field-mt-srv-subheader-body {
+  text-align: center;
+}
+@media (min-width: 992px) {
+  .layout-no-sidebars .service-content-top-first + .service-content-top-second .field--name-field-mt-srv-subheader-body {
+    text-align: left;
+  }
+}
+@media (min-width: 992px) {
+  .field--name-field-mt-srv-subheader-body {
+    margin: 0 auto;
+    width: 66.666667%;
+  }
+  .service-content-top-first + .service-content-top-second .field--name-field-mt-srv-subheader-body {
+    width: 100%;
+  }
+}
+
+/*image field*/
+.node--type-mt-service .field--name-field-mt-srv-image {
+  margin-bottom: 30px;
+}
+.node--type-mt-service.node--view-mode-teaser .images-container {
+  margin-bottom: 15px;
+}
+
+/*price field*/
+.node--type-mt-service .field--name-field-mt-srv-price {
+  font-size: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/*buy link field*/
+.node--type-mt-service .field--name-field-mt-srv-buy-link {
+  text-align: center;
+}
+@media (min-width: 992px) {
+  .layout-no-sidebars .service-content-top-first + .service-content-top-second .field--name-field-mt-srv-buy-link a {
+    display: block;
+  }
+}
+.node--type-mt-service .field--name-field-mt-srv-buy-link a {
+  font-size: 18px;
+  padding: 15px 25px;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 10px 0 40px;
+  text-align: center;
+  background-color: transparent;
+  color: #ffffff;
+}
+.headings-wide-spacing-enabled .node--type-mt-service .field--name-field-mt-srv-buy-link a {
+  letter-spacing: 0.25em;
+}
+.region--light-typography .node--type-mt-product .field--name-field-mt-srv-buy-link a {
+  border-color: #ffffff;
+  color: #ffffff;
+  background-color: transparent;
+}
+.region--light-typography .node--type-mt-product .field--name-field-mt-srv-buy-link a:hover,
+.region--light-typography .node--type-mt-product .field--name-field-mt-srv-buy-link a:focus {
+  background-color: #ffffff;
+  color: #555555;
+}

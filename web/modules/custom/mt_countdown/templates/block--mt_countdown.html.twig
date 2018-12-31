@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * mt_countdown module block template.
+ */
+ #}
+<style>
+
+  .mt-count-down-block {
+    background-color: {{ data.background }};
+  }
+  .mt-count-down__title {
+    color: {{ data.title_color }};
+  }
+  .mt-count-down__notes {
+    color: {{ data.notes_color }};
+  }
+  .mt-count-down__message {
+    color: {{ data.message_color }};
+  }
+  .mt-count-down__daysto {
+    color: {{ data.notes_color }};
+  }
+  .mt-count-down__button {
+    background-color: {{ data.button_background }};
+    color: {{ data.button_color }};
+  }
+  .mt-count-down__hint {
+    color: {{ data.message_color }};
+  }
+
+</style>
+<div class="{{ data.predefined_palettes }} mt-count-down mt-count-down-block">
+
+  {% if data.title %}
+    <div class="mt-count-down__title">
+      {{ data.title|t }}
+    </div>
+  {% endif %}
+
+  {% if data.prompt_message %}
+    <div class="mt-count-down__message">
+      {{ data.prompt_message|t }}
+    </div>
+  {% endif %}
+
+  <div class="mt-count-down__daysto">
+    <span class="mt-count-down__notes">
+      {% if data.days_to %}
+        {{ data.days_to|t }}
+      {% endif %}
+    </span>
+    <div class="mt-count-down-slot"></div>
+  </div>
+
+  {% if data.target_url and data.dismiss_text %}
+    <a class="mt-count-down__button" href="{{ data.target_url }}">{{ data.dismiss_text|t }}</a>
+  {% endif %}
+
+  {% if data.hint_text %}
+    <div class="mt-count-down__hint">{{ data.hint_text }}</div>
+  {% endif %}
+
+</div>

@@ -1,0 +1,50 @@
+/**
+ * @file
+ * Visual styles for Directory+'s icon features.
+ */
+.feature {
+  margin: 25px 0;
+  text-align: center;
+}
+.feature__icon {
+  width: 80px;
+  height: 80px;
+  display: block;
+  text-align: center;
+  margin: 0 auto 30px;
+  border-color: transparent;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  border-radius: 100%;
+}
+.region--dark-typography .feature__icon {
+  color: #ffffff;
+}
+.region--light-typography .feature__icon {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.8);
+  border-width: 1px;
+  border-style: solid;
+}
+.feature__icon .field--name-field-mt-if-fa-icon,
+.feature__icon .fontawesome-icons,
+.feature__icon .fontawesome-icon,
+.feature__icon .svg-inline--fa {
+  height: 100%;
+}
+.feature__title {
+  margin-bottom: 20px;
+}
+.feature__image {
+  margin-bottom: 30px;
+}
+.feature .field--name-field-mt-if-body {
+  line-height: 1.5;
+}
+.region--dark-typography .feature .field--name-field-mt-if-body {
+  color: #707070;
+}

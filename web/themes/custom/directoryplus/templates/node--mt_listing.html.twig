@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * Conference+'s theme implementation to display a Product node.
+ */
+#}
+
+{% extends "node.html.twig" %}
+{% block content %}
+  {{ attach_library('directoryplus/node-listing') }}
+  {% if content.field_mt_lst_banner_image['0'] is empty %}
+    {{ content.field_mt_lst_category }}
+    {% if content.field_mt_lst_address|render or content.field_mt_lst_city|render %}
+      <div class="address-container">
+        <i class="fa fa-map-marker-alt"></i>
+        {{ content.field_mt_lst_address }}
+        {{ content.field_mt_lst_city }}
+      </div>
+    {% endif %}
+    {% if content.field_mt_lst_location|render %}
+      {{ attach_library('directoryplus/map-link-scroll') }}
+      <div class="map-link">
+        <i class="fa fa-map"></i>
+        <a href="#" class="map-link--smooth-scroll">{% trans %}Show Map{% endtrans %}</a>
+      </div>
+    {% endif %}
+  {% endif %}
+  {{ content|without('field_mt_lst_banner_image', 'field_mt_lst_category', 'field_mt_lst_address', 'field_mt_lst_city') }}
+{% endblock %}

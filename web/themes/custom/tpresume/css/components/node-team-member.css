@@ -1,0 +1,29 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's team member content type.
+ */
+.page-node-type-mt-team-member h1.page-title {
+  margin-bottom: 10px;
+  font-size: 42px;
+}
+.page-node-type-mt-team-member .field--name-field-mt-tmm-member-photo {
+  margin-bottom: 20px;
+}
+.page-node-type-mt-team-member .field--name-field-mt-tmm-subtitle {
+  font-size: 22px;
+  margin-bottom: 10px;
+  line-height: 1.20;
+  padding: 0;
+  margin: 20px 0 10px 0;
+  font-weight: 600;
+}
+.page-node-type-mt-team-member .icons-list {
+  padding-bottom: 30px;
+}
+.field--name-field-mt-tmm-subheader-body {
+  font-size: 24px;
+}
+.field--name-field-mt-tmm-subheader-body p {
+  font-weight: 500;
+  padding-bottom: 25px;
+}

@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's popular tags views.
+ */
+.view-mt-popular-tags .views-row {
+  display: inline-block;
+  margin: 0;
+}
+.view-mt-popular-tags .views-row a {
+  padding: 6px;
+  line-height: 1;
+  display: inline-block;
+  margin: 1px 0 1px 0;
+  font-size: 10px;
+  text-decoration: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+}
+.region--dark-typography .view-mt-popular-tags .views-row a {
+  color: #555555;
+  border-color: #acacac;
+}
+.region--dark-typography .view-mt-popular-tags .views-row a:hover,
+.region--dark-typography .view-mt-popular-tags .views-row a:focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.view-mt-popular-tags .views-row a:before {
+  content: "#";
+}
+.region--light-typography .view-mt-popular-tags .views-row a {
+  text-decoration: none;
+}
+.region--light-typography .view-mt-popular-tags .views-row a:hover {
+  background-color: #ffffff;
+}
+.region--dark-background.region--light-typography .view-mt-popular-tags .views-row a:hover,
+.region--colored-background.region--light-typography .view-mt-popular-tags .views-row a:hover {
+  color: #ffffff;
+}

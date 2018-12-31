@@ -1,0 +1,5 @@
+# Schema for the configuration files of the Directory+ theme.
+
+directoryplus.settings:
+  type: theme_settings
+  label: 'Directory+ settings'

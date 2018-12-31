@@ -1,0 +1,56 @@
+/**
+ * @file
+ * Visual styles for mt-additional-features field in Directory+.
+ */
+.field--name-field-mt-lst-contact-options {
+  margin: 20px -15px 40px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  -ms-flex-pack: center!important;
+  justify-content: center!important;
+}
+
+/*apply clearfix to field--name-field-mt-lst-contact-options field*/
+.field--name-field-mt-lst-contact-options:before {
+  display: table;
+  content: " ";
+}
+.field--name-field-mt-lst-contact-options:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+/*apply full width background color to field-mt-special-feature field*/
+.field--name-field-mt-lst-contact-options > .field__item,
+.field--name-field-mt-lst-contact-options > .field__items > .field__item {
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+  min-height: 1px;
+}
+@media (min-width: 992px) {
+  .field--name-field-mt-lst-contact-options > .field__item,
+  .field--name-field-mt-lst-contact-options > .field__items > .field__item {
+    -ms-flex: 0 0 33.333333%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+  }
+}
+
+/* contact info options title */
+.field--name-field-mt-lst-contact-options .feature__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #707070;
+  word-break: break-all;
+  margin-bottom: 20px;
+}

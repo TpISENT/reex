@@ -1,0 +1,86 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's testimonials carousel.
+ */
+.mt-carousel-testimonials {
+  padding: 0;
+}
+.mt-carousel-testimonials:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f10d";
+  font-size: 150px;
+  line-height: 1;
+  margin-left: -70px;
+  color: rgba(112, 112, 112, 0.12);
+  top: -90px;
+  left: 50%;
+  display: block;
+}
+.region--light-typography .mt-carousel-testimonials:after {
+  color: rgba(255, 255, 255, 0.24);
+}
+.mt-carousel-testimonials .owl-item {
+  margin-bottom: 0;
+}
+.mt-carousel-testimonials .mt-carousel-item {
+  margin: 0 15px;
+  min-height: 230px;
+  padding: 0 30px;
+  text-align: center;
+}
+.mt-carousel-testimonials .views-field-field-image {
+  display: inline-block;
+  width: auto;
+}
+.mt-carousel-testimonials .views-field-field-mt-tst-body {
+  font-size: 18px;
+  line-height: 1.66;
+}
+.region--dark-typography .mt-carousel-testimonials .views-field-field-mt-tst-body {
+  color: #707070;
+}
+.mt-carousel-testimonials .views-field-title a {
+  font-size: 18px;
+}
+.region--dark-typography .mt-carousel-testimonials .views-field-title a {
+  color: #707070;
+}
+.mt-carousel-testimonials .views-field-field-mt-tst-subtitle {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.region--dark-typography .mt-carousel-testimonials .views-field-field-mt-tst-subtitle {
+  color: #707070;
+}
+.mt-carousel-testimonials .button {
+  margin-top: 40px;
+  margin-bottom: 0;
+  min-width: 270px;
+}
+@media (max-width: 1400px) and (min-width: 1200px) {
+  .mt-carousel-testimonials .mt-carousel-item {
+    min-height: 290px;
+  }
+}
+@media (max-width: 991px) and (min-width: 768px) {
+  .mt-carousel-testimonials .mt-carousel-item {
+    min-height: 290px;
+  }
+}
+
+/*controls*/
+.mt-carousel-testimonials .owl-nav {
+  height: 0;
+  position: absolute;
+  top: 50%;
+  margin-top: -27px;
+}
+.mt-carousel-testimonials .owl-nav .owl-prev {
+  left: 55px;
+}
+.mt-carousel-testimonials .owl-nav .owl-next {
+  left: auto;
+  right: 55px;
+}

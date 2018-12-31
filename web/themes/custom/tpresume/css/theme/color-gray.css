@@ -1,0 +1,925 @@
+/**
+ * @file
+ * Gray color styling for TpISENTResume for Drupal 8.
+ *
+ * $base: #636363;
+ * $secondary: #;
+ * $dark: #464646;
+ */
+/* $base: elements */
+a {
+  color: #464646;
+}
+
+a:hover,
+a:focus {
+  color: #636363;
+}
+
+a.link--dark,
+.link--dark a {
+  color: #636363;
+}
+
+a.link--dark:hover,
+.link--dark a:hover,
+a.link--dark:focus,
+.link--dark a:focus {
+  color: #464646;
+}
+
+a.link--bordered,
+.link--bordered a {
+  border-color: #464646;
+}
+
+.text--dark {
+  color: #464646;
+}
+
+.region--colored-background h1.text--dark,
+.region--colored-background h2.text--dark,
+.region--colored-background h3.text--dark,
+.region--colored-background h4.text--dark,
+.region--colored-background h5.text--dark,
+.region--colored-background h6.text--dark {
+  color: #464646;
+}
+
+.text--colored {
+  color: #636363;
+}
+
+.region--black-background h1.text--colored,
+.region--black-background h2.text--colored,
+.region--black-background h3.text--colored,
+.region--black-background h4.text--colored,
+.region--black-background h5.text--colored,
+.region--black-background h6.text--colored,
+.region--dark-background h1.text--colored,
+.region--dark-background h2.text--colored,
+.region--dark-background h3.text--colored,
+.region--dark-background h4.text--colored,
+.region--dark-background h5.text--colored,
+.region--dark-background h6.text--colored {
+  color: #636363;
+}
+
+.link--hover-style-3 {
+  background-image: linear-gradient(rgba(99, 99, 99, 0.5) 0%, rgba(99, 99, 99, 0.5) 100%);
+}
+
+.link--hover-style-3:hover {
+  background-image: linear-gradient(#636363 0%, #636363 100%);
+}
+
+.region--light-typography .link--hover-style-3:hover {
+  color: #636363;
+}
+
+/* $base: layout */
+.region--dark-background {
+  background-color: #464646;
+}
+
+.region--colored-background {
+  background-color: #636363;
+}
+
+.region--white-dark-background {
+  background: #ffffff;
+  background: -moz-linear-gradient(top, #ffffff 50%, #464646 50%);
+  background: -webkit-linear-gradient(top, #ffffff 50%, #464646 50%);
+  background: linear-gradient(to bottom, #ffffff 50%, #464646 50%);
+}
+
+.region--gray-background + .region--white-dark-background {
+  background: #f3f3f3;
+  background: -moz-linear-gradient(top, #f3f3f3 50%, #464646 50%);
+  background: -webkit-linear-gradient(top, #f3f3f3 50%, #464646 50%);
+  background: linear-gradient(to bottom, #f3f3f3 50%, #464646 50%);
+}
+
+.region--dark-background + .region--separator-incline-diagonal:before {
+  background: linear-gradient(to bottom right, #464646 49.5%, transparent 50%);
+}
+
+.region--colored-background + .region--separator-incline-diagonal:before {
+  background: linear-gradient(to bottom right, #636363 49.5%, transparent 50%);
+}
+
+.region--dark-background + .region--separator-decline-diagonal:before {
+  background: linear-gradient(to bottom left, #464646 49.5%, transparent 50%);
+}
+
+.region--colored-background + .region--separator-decline-diagonal:before {
+  background: linear-gradient(to bottom left, #636363 49.5%, transparent 50%);
+}
+
+.page-container-border-enabled .page-container {
+  border-color: #636363;
+}
+
+/* components: accordion */
+.region--light-typography.region--dark-background .card-title a:hover,
+.region--light-typography.region--dark-background .card-title a:focus {
+  color: #636363;
+}
+
+.card-header--trigger-icon .card-title a:after {
+  background-color: #464646;
+}
+
+.card-header--trigger-icon .card-title a.collapsed:hover:after,
+.card-header--trigger-icon .card-title a.collapsed:focus:after {
+  background-color: #464646;
+}
+
+.collapse-group.collapse-group--style-2 .card .card-title a {
+  background-color: #464646;
+}
+
+.collapse-group.collapse-group--style-2 .card-title a:hover,
+.collapse-group.collapse-group--style-2 .card .card-title a.collapsed:hover,
+.collapse-group.collapse-group--style-2 .card-title a:focus,
+.collapse-group.collapse-group--style-2 .card .card-title a.collapsed:focus {
+  background-color: #636363;
+}
+
+.region--light-typography .collapse-group.collapse-group--style-2 .card-header--trigger-icon .card-title a,
+.region--light-typography .collapse-group.collapse-group--style-2 .card-header--trigger-icon .card-title a:hover {
+  color: #636363;
+}
+
+/* components: buttons */
+a.button,
+.button > a,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+a.button.button--outline,
+.button.button--outline > a {
+  border-color: #464646;
+  color: #464646;
+}
+
+.region--dark-typography a.button.button--outline:hover,
+.region--dark-typography .button.button--outline > a:hover,
+.region--dark-typography a.button.button--outline:focus,
+.region--dark-typography .button.button--outline > a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+a.button:hover,
+a.button:focus,
+.button > a:hover,
+.button > a:focus,
+input[type="submit"]:hover,
+input[type="submit"]:focus,
+input[type="reset"]:hover,
+input[type="reset"]:focus,
+input[type="button"]:hover,
+input[type="button"]:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+a.button.button--hover-style-2:before,
+.button.button--hover-style-2 > a:before {
+  background-color: #636363;
+}
+
+/* components: collapsible block */
+.collapsible-block__trigger a {
+  background-color: #636363;
+}
+
+.collapsible-block__trigger a:hover,
+.collapsible-block__trigger a:focus {
+  background-color: #636363;
+}
+
+.region--colored-background .collapsible-block__trigger a {
+  background-color: #636363;
+  text-decoration: none;
+}
+
+.region--colored-background .collapsible-block__trigger a:hover {
+  background-color: rgba(99, 99, 99, 0.8);
+}
+
+/* components: comments */
+.comment-wrapper h2.title:before {
+  color: #464646;
+}
+
+/* components: detailed feature block */
+.region--dark-typography .detailed-feature__icon .fontawesome-icon {
+  background-color: #464646;
+}
+
+.region--dark-typography .list--fa-check-circle li:before {
+  color: #8dc63f;
+}
+
+/* components: dropdowns */
+.region--colored-background .dropdown-menu {
+  background-color: #636363;
+}
+
+.region--dark-background .dropdown-menu {
+  background-color: #464646;
+}
+
+/* components: fancy block */
+.region--dark-background .fancy-block-text {
+  background-color: #464646;
+}
+
+.region--colored-background .fancy-block-text {
+  background-color: #636363;
+}
+
+/* components: fancy linked images block */
+.clip-path-support .clip-pentagon-container {
+  background-color: #464646;
+}
+
+.clip-path-support .clip-circle-container {
+  background-color: #464646;
+}
+
+.clip-path-support .clip-rectangle-container:before {
+  border-color: #464646;
+}
+
+/* CSS rules only for FF*/
+@-moz-document url-prefix() {
+  .clip-pentagon-container {
+    background-color: #464646;
+  }
+
+  .clip-circle-container {
+    background-color: #464646;
+  }
+
+  .clip-rectangle-container:before {
+    border-color: #464646;
+  }
+}
+/* components: featured linked text tiles block */
+.region--light-typography .featured-linked-text-tile__body a {
+  color: #464646;
+}
+
+.region--colored-background .featured-linked-text-tile a.button {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.region--light-typography .featured-linked-text-tile a.button:hover {
+  border-color: #464646;
+  color: #464646;
+}
+
+.featured-linked-text-tile .featured-linked-text-tile__title a {
+  color: #464646;
+}
+
+/* components: forms */
+input.form-text:hover,
+input.form-tel:hover,
+input.form-email:hover,
+input.form-url:hover,
+input.form-search:hover,
+input.form-file:hover,
+input.form-number:hover,
+input.form-color:hover,
+input.form-date:hover,
+input.form-time:hover,
+textarea:hover,
+select:hover,
+input.form-text:focus,
+input.form-tel:focus,
+input.form-email:focus,
+input.form-url:focus,
+input.form-search:focus,
+input.form-file:focus,
+input.form-number:focus,
+input.form-color:focus,
+input.form-date:focus,
+input.form-time:focus,
+textarea:focus,
+select:focus {
+  border-color: #464646;
+}
+
+/* components: content front page background */
+@media (max-width: 767px) {
+  .background-image-area.region--colored-background .header {
+    background-color: #636363;
+  }
+
+  .background-image-area.region--dark-background .header {
+    background-color: #464646;
+  }
+}
+/* components: field taxonomy terms */
+.field--entity-reference-target-type-taxonomy-term .field__item a:hover,
+.field--entity-reference-target-type-taxonomy-term.field__item a:hover {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: fixed header */
+.onscroll .header.js-fixed.region--dark-background,
+.onscroll .region--dark-background .header.js-fixed {
+  background-color: rgba(70, 70, 70, 0.95);
+}
+
+.onscroll .header.js-fixed.region--colored-background,
+.onscroll .region--colored-background .header.js-fixed {
+  background-color: rgba(99, 99, 99, 0.95);
+}
+
+/* components: flexslider in page */
+.in-page-images-carousel .slides li a:after {
+  background-color: rgba(70, 70, 70, 0.8);
+}
+
+.in-page-images-carousel .slides li a:hover:after {
+  background-color: rgba(70, 70, 70, 0.5);
+}
+
+/* components: frontpage cover block */
+.frontpage-cover-block__section .button span {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+/* components: highlights */
+.region--dark-typography .highlight-head {
+  color: #636363;
+}
+
+.region--dark-typography .highlight-icon {
+  color: #636363;
+}
+
+.region--dark-typography .highlights-grid-item .svg-inline--fa {
+  color: #636363;
+}
+
+.region--dark-typography .highlights-grid-item h5 {
+  color: #636363;
+}
+
+/* components: how it workd */
+.region--dark-background .field--name-field-mt-hiw-item .field__item .how-it-works__badge {
+  background-color: #636363;
+}
+
+.region--colored-background .field--name-field-mt-hiw-item .field__item .how-it-works__badge {
+  background-color: #464646;
+}
+
+/* components: icons feature */
+.region--dark-typography .feature__icon {
+  background-color: #464646;
+}
+
+/* components: icons list */
+.region--dark-typography ul.icons-list.icons-list--bordered li a:hover {
+  color: #636363;
+  border-color: #636363;
+}
+.region--dark-background ul.icons-list li a:hover {
+  background-color: #636363;
+}
+.region--colored-background ul.icons-list li a:hover {
+  background-color: #464646;
+}
+
+/* components: image overlay */
+.overlay--colored {
+  background-color: rgba(99, 99, 99, 0.8);
+}
+
+.overlay--colored.overlay--visible {
+  background-color: rgba(99, 99, 99, 0.4);
+}
+
+.overlay--colored.overlay--visible:hover {
+  background-color: rgba(99, 99, 99, 0.6);
+}
+
+.overlay-icon--button {
+  background-color: #464646;
+}
+
+/* components: in page navigation */
+.header-container .region--dark-typography ul.in-page-navigation li a.active,
+.header-container .region--dark-typography ul.in-page-navigation li a:hover,
+.header-container .region--dark-typography ul.in-page-navigation li a:focus {
+  background-color: #636363;
+}
+
+/* components: inverted header */
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li.sfHover > a,
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li > a:hover,
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li > a.is-active,
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li.active-trail > a,
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li.sfHover > a.is-active,
+.inverted-header-enabled:not(.onscroll) .header-container .sf-menu ul li.sfHover.active-trail > a {
+  background-color: #636363;
+}
+
+/* components: language switcher */
+.region--dark-typography .block-language ul li .is-active {
+  color: #464646;
+}
+
+/* components: layout switcher */
+.layout-switcher ul li.active a,
+.layout-switcher ul li a:hover,
+.layout-switcher ul li a:focus {
+  color: #464646;
+}
+
+/*main slideshow block*/
+.ms-transparent-background .region--dark-typography.tp-caption__title a:hover {
+  color: #636363;
+}
+
+/* components: menu */
+.region--dark-typography ul.menu li a.is-active {
+  color: #464646;
+}
+
+.region--dark-typography ul.menu:not(.cta-active) li > a:hover:before,
+.region--dark-typography ul.menu:not(.cta-active) li > a:focus:before {
+  color: #636363;
+}
+
+.header-container ul.menu > li > a:hover {
+  background-color: #636363;
+  border-bottom-color: #464646;
+}
+
+.header-container .sf-menu > li.active-trail > a {
+  color: #464646;
+}
+
+.header-container .sf-menu > li.sfHover > a,
+.header-container .sf-menu > li > a:hover,
+.header-container .sf-menu > li.sfHover > a.is-active,
+.header-container .sf-menu > li.sfHover.active-trail > a {
+  background-color: #636363;
+  border-bottom-color: #464646;
+}
+
+.header-container .region--dark-background .sf-menu > li.sfHover > a,
+.header-container .region--dark-background .sf-menu > li > a:hover,
+.header-container .region--dark-background .sf-menu > li.sfHover > a.is-active,
+.header-container .region--dark-background .sf-menu > li.sfHover.active-trail > a {
+  background-color: #636363;
+  border-bottom-color: #636363;
+}
+
+.header-container .region--colored-background .sf-menu > li.sfHover > a,
+.header-container .region--colored-background .sf-menu > li > a:hover,
+.header-container .region--colored-background .sf-menu > li.sfHover > a.is-active,
+.header-container .region--colored-background .sf-menu > li.sfHover.active-trail > a {
+  background-color: #464646;
+  border-bottom-color: #464646;
+}
+
+.header-container .sf-menu.menu ul {
+  background-color: rgba(99, 99, 99, 0.92);
+}
+
+.header-container .sf-menu ul li.sfHover > a,
+.header-container .sf-menu ul li > a:hover,
+.header-container .sf-menu ul li.sfHover > a.is-active,
+.header-container .sf-menu ul li.sfHover.active-trail > a,
+.header-container .sf-menu ul li a.is-active,
+.header-container .sf-menu ul li.active-trail > a {
+  background-color: #464646;
+}
+
+.region--dark-typography ul.menu.cta-active > li:last-child > a {
+  border-color: #464646;
+  color: #464646;
+}
+
+.region--dark-typography ul.menu.cta-active > li:last-child > a:hover,
+.region--dark-typography ul.menu.cta-active > li:last-child > a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+.region--light-typography .menu.cta-active > li:last-child > a:hover {
+  opacity: 1;
+}
+
+.region--light-typography .menu.cta-active > li:last-child > a:hover,
+.region--light-typography .menu.cta-active > li:last-child > a:focus {
+  color: #464646;
+}
+
+.region--dark-typography .footer-bottom__section ul.menu li a:hover,
+.region--dark-typography .footer-bottom__section ul.menu li a:focus {
+  border-bottom-color: #464646;
+  color: #464646;
+}
+
+.region--dark-typography .subfooter__section ul.menu li a:hover,
+.region--dark-typography .subfooter__section ul.menu li a:focus {
+  border-color: #464646;
+}
+
+/* components: mt count down */
+.mt-count-down-inject.mt-count-down-theme {
+  background-color: #464646;
+}
+
+.mt-count-down-inject.mt-count-down-theme .mt-count-down__button {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.mt-count-down-inject.mt-count-down-theme .mt-count-down__button:hover,
+.mt-count-down-inject.mt-count-down-theme .mt-count-down__button:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+.mt-count-down-block.mt-count-down-theme .mt-count-down__button {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.mt-count-down-block.mt-count-down-theme .mt-count-down__button:hover,
+.mt-count-down-block.mt-count-down-theme .mt-count-down__button:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: node article*/
+.node--view-mode-teaser.node--type-article .node__header h2 a:hover {
+  color: #636363;
+}
+
+/* components: node listing */
+.page-node-type-mt-listing .field--entity-reference-target-type-taxonomy-term.field__item a {
+  background-color: #464646;
+}
+.page-node-type-mt-listing .field--entity-reference-target-type-taxonomy-term.field__item a:hover,
+.page-node-type-mt-listing .field--entity-reference-target-type-taxonomy-term.field__item a:focus {
+  background-color: #636363;
+}
+.address-container .svg-inline--fa,
+.map-link .svg-inline--fa {
+  color: #464646;
+}
+
+/* components: node product */
+.node--type-mt-product .field--name-field-mt-prd-buy-link a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.node--type-mt-product .field--name-field-mt-prd-buy-link a:hover,
+.node--type-mt-product .field--name-field-mt-prd-buy-link a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+.field--name-field-mt-highlight-link a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.field--name-field-mt-highlight-link a:hover,
+.field--name-field-mt-highlight-link a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: node service */
+.node--type-mt-service .field--name-field-mt-srv-buy-link a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.node--type-mt-service .field--name-field-mt-srv-buy-link a:hover,
+.node--type-mt-service .field--name-field-mt-srv-buy-link a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: node testimonial */
+.field--name-field-mt-tst-testimonial-link a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.field--name-field-mt-tst-testimonial-link a:hover,
+.field--name-field-mt-tst-testimonial-link a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: owl carousel global */
+.owl-nav div {
+  color: #464646;
+}
+
+.owl-nav div:hover {
+  color: #636363;
+}
+
+.owl-dot.active span {
+  border-color: #464646;
+  background-color: #464646;
+}
+
+.owl-dot:hover span {
+  border-color: #636363;
+  background-color: #636363;
+}
+
+/* components: pager */
+li.pager__item a:hover,
+li.pager__item a:focus {
+  background-color: #636363;
+}
+
+/* components: post progress */
+.post-progress__bar {
+  background-color: #464646;
+}
+
+/* components: pills */
+.nav-pills > li > a.nav-link:hover,
+.nav-pills > li > a.nav-link:focus {
+  background-color: #636363;
+}
+
+/* components: progress bars */
+.progress-bar-default {
+  background-color: #464646;
+}
+
+/* components: search */
+.region--dark-typography .block-search .form-actions:after {
+  color: #464646;
+}
+
+/* components: separators */
+.separator {
+  background: #464646;
+  background: -webkit-linear-gradient(left, #464646 0%, #636363 100%);
+  background: -o-linear-gradient(left, #464646 0%, #636363 100%);
+  background: linear-gradient(to right, #464646 0%, #636363 100%);
+}
+
+/* components: share links */
+.share-links ul li a:hover {
+  background-color: #636363;
+}
+
+.js-share-links-fixed .share-links ul li a:hover {
+  background-color: #636363;
+}
+
+/* components: slideout */
+.slideout-toggle {
+  background-color: #464646;
+}
+
+/* components: slider revolution global */
+.tp-tabs {
+  background-color: rgba(70, 70, 70, 0.93) !important;
+}
+
+.tp-tabs .tp-tab.selected,
+.tp-tabs .tp-tab:hover {
+  background-color: #636363;
+}
+
+/* components: slider revolution internal carousel */
+.carousel-internal .tp-bullets .tp-bullet:hover {
+  background-color: #636363;
+}
+
+/* components: tabs */
+.region--dark-typography .nav-tabs ~ .tab-content {
+  border-color: #464646;
+}
+.region--dark-typography .nav-tabs a.nav-link.active {
+  border-bottom-color: #464646;
+}
+.region--dark-typography .nav-tabs a.nav-link.active:after {
+  border-bottom-color: #464646;
+}
+.nav-tabs a.nav-link:hover {
+  background-color: #464646;
+}
+.nav-tabs.nav-tabs--fancy a.nav-link.active,
+.nav-tabs.nav-tabs--fancy a.nav-link.active:focus,
+.nav-tabs.nav-tabs--fancy a.nav-link.active:hover {
+  border-color: #464646;
+}
+
+/* components: timeline */
+.region--dark-background .field--name-field-mt-tml-timeline-item .field__item .timeline__badge {
+  background-color: #636363;
+}
+
+.region--colored-background .field--name-field-mt-tml-timeline-item .field__item .timeline__badge {
+  background-color: #464646;
+}
+
+/* components: to top */
+.to-top {
+  color: #464646;
+  border-color: #464646;
+}
+
+.to-top:hover {
+  background-color: #636363;
+}
+
+/* components: view articles list 2 */
+.region--dark-typography .view-articles-list-2 .views-row:after {
+  color: #464646;
+}
+
+/* components: view categories */
+ .view-mt-categories .view-mt-category-item {
+  background-color: #464646;
+}
+.view-mt-categories .view-mt-category-item:hover {
+  background-color: #636363;
+  border-bottom-color: #464646;
+}
+
+/* components: view collections image overlay */
+.view-collections-grid .overlay-inner a,
+.view-collections-carousel .overlay-inner a,
+.view-collection-masonry .overlay-inner a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.view-collections-grid .overlay-inner a:hover,
+.view-collections-carousel .overlay-inner a:hover,
+.view-collection-masonry .overlay-inner a:hover {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: view latest items */
+.region--dark-typography .view-latest-items .views-row:hover .views-field-title a,
+.region--dark-typography .view-latest-items .views-row:hover .views-field-field-mt-srv-body,
+.region--dark-typography .view-latest-items .views-row:hover .views-field-field-mt-prd-body,
+.region--dark-typography .view-latest-items .views-row:hover .views-field-body {
+  color: #636363;
+}
+
+/* components: view listings grid */
+.view-listings-grid .views-row--Featured .categories-container a {
+  background-color: rgba(70, 70, 70, 0.95);
+}
+.view-listings-grid .views-row--Featured .view-listings-grid-item {
+  border-color: #464646;
+}
+.view-listings-grid .views-row--Sponsored .view-listings-grid-item {
+  border-color: #2fb134;
+}
+.view-listings-grid .views-row--Featured .view-listings-grid-item .views-field-field-mt-lst-address-container {
+  background-color: rgba(70, 70, 70, 0.06);
+}
+.view-listings-grid .views-row--Sponsored .view-listings-grid-item .views-field-field-mt-lst-address-container {
+  background-color: rgba(47, 177, 52, 0.06);
+}
+.view-listings-grid .views-row--Sponsored .view-listings-grid-item .overlay--colored {
+  background-color: rgba(47, 177, 52, 0.80);
+}
+.view-listings-grid .views-row--Sponsored .categories-container a {
+  background-color: rgba(47, 177, 52, 0.95);
+}
+.view-listings-grid .views-row .categories-container a:hover {
+  background-color: rgba(99, 99, 99, 0.95);
+}
+.view-listings-grid .views-row--Sponsored .ribbon {
+  background-color: #2fb134;
+}
+.view-listings-grid .views-row--Featured .ribbon {
+  background-color: #464646;
+}
+
+/* components: view listings list */
+.view-listings-list .listings-list-item--Featured {
+  border-color: #464646;
+  background-color: rgba(70, 70, 70, 0.06);
+}
+.view-listings-list .listings-list-item--Sponsored {
+  border-color: #2fb134;
+  background-color: rgba(47, 177, 52, 0.06);
+}
+.view-listings-list .listings-list-item--Sponsored .ribbon,
+.view-listings-list .listings-list-item--Sponsored .views-field-field-mt-lst-category a {
+  background-color: #2fb134;
+}
+.view-listings-list .listings-list-item--Featured .ribbon {
+  background-color: #464646;
+}
+.view-listings-list .views-field-field-mt-lst-category a {
+  background-color: #464646;
+}
+.view-listings-list .views-field-field-mt-lst-category a:focus,
+.view-listings-list .views-field-field-mt-lst-category a:hover {
+  background-color: #636363;
+}
+.view-listings-list .views-field-field-title a:hover,
+.view-listings-list .views-field-field-title a:focus {
+  color: #636363;
+}
+
+/* components: view popular taxonomy */
+.region--light-typography .view-mt-popular-tags .views-row a:hover {
+  color: #636363;
+}
+.region--dark-typography .view-mt-popular-tags .views-row a:hover {
+  background-color: #636363;
+}
+.region--dark-background .view-mt-popular-tags .views-row a:hover {
+  background-color: #636363;
+}
+.region--colored-background .view-mt-popular-tags .views-row a:hover {
+  background-color: #464646;
+}
+
+/* components: view pricing tables */
+.view-pricing-tables .pricing-table {
+  border-color: #464646;
+}
+
+.region--dark-typography .view-pricing-tables .pricing-table .views-field-title a:hover {
+  color: #636363;
+}
+
+.region--dark-typography .view-pricing-tables .pricing-table .pricing-table-body .svg-inline--fa {
+  color: #8dc63f;
+}
+
+/* components: view promoted posts carousel */
+.view-promoted-posts-carousel a.button,
+.view-promoted-posts-carousel .button > a {
+  background-color: #464646;
+  border-color: #464646;
+}
+
+.view-promoted-posts-carousel a.button:hover,
+.view-promoted-posts-carousel a.button:focus,
+.view-promoted-posts-carousel .button > a:hover,
+.view-promoted-posts-carousel .button > a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}
+
+/* components: view team members carousel */
+.region--light-typography .view-team-members-carousel .text-container .views-field-title a {
+  color: #464646;
+}
+
+/* components: view team members masonry */
+.view-team-members-masonry .masonry-grid-item .overlay__text:after {
+  background: #464646;
+  background: -webkit-linear-gradient(left, #464646 0%, #636363 100%);
+  background: -o-linear-gradient(left, #464646 0%, #636363 100%);
+  background: linear-gradient(to right, #464646 0%, #636363 100%);
+}
+
+/* components: views */
+.view > .more-link a {
+  border-color: #464646;
+}
+
+.col-12 .view > .more-link a {
+  color: #464646;
+  border-color: #464646;
+}
+
+.col-12 .view > .more-link a:hover,
+.col-12 .view > .more-link a:focus {
+  background-color: #636363;
+  border-color: #636363;
+}

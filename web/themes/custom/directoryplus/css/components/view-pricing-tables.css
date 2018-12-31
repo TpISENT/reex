@@ -1,0 +1,145 @@
+/**
+ * @file
+ * Visual styles for Directory+'s pricing tables.
+ */
+.view-pricing-tables {
+  position: relative;
+}
+.view-pricing-tables:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  content: "\f07a";
+  font-weight: 900;
+  font-size: 150px;
+  line-height: 1;
+  margin-left: -150px;
+  color: rgba(112, 112, 112, 0.12);
+  top: -90px;
+  left: 50%;
+  display: block;
+  width: 300px;
+  text-align: center;
+}
+.region--light-typography .view-pricing-tables:after {
+  color: rgba(255, 255, 255, 0.24);
+}
+.view-pricing-tables .view-header {
+  padding-bottom: 40px;
+}
+.view-pricing-tables .view-footer {
+  font-size: 12px;
+  text-align: center;
+  padding-top: 35px;
+}
+.view-pricing-tables .pricing-table {
+  border-width: 1px;
+  border-style: solid;
+  margin: 0 0 40px 0;
+  padding:0 30px 120px 30px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  position: relative;
+   -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.view-pricing-tables .pricing-table:hover {
+  -moz-box-shadow: inset 0px 5px 15px rgba(200,200,200,0.5);
+  -o-box-shadow: inset 0px 5px 15px rgba(200,200,200,0.5);
+  -webkit-box-shadow: inset 0px 5px 15px rgba(200,200,200,0.5);
+  box-shadow: inset 0px 5px 15px rgba(200,200,200,0.5);
+}
+.region--light-typography .view-pricing-tables .pricing-table {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.region--light-typography .view-pricing-tables .pricing-table:hover {
+  border-color: rgba(255, 255, 255, 1);
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.view-pricing-tables .pricing-table .views-field-title {
+  font-weight: 600;
+  font-size: 28px;
+  text-align: center;
+  padding: 45px 0 35px;
+}
+.view-pricing-tables .most-popular .pricing-table .views-field-title {
+  padding: 65px 0 15px;
+}
+.view-pricing-tables .pricing-table .views-field-title a {
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #555555;
+}
+.view-pricing-tables .pricing-table .views-field-title a:hover {
+  text-decoration: none;
+}
+.region--light-typography .view-pricing-tables .pricing-table .views-field-title a {
+  color: #ffffff;
+}
+.view-pricing-tables .pricing-table .views-field-title h3 {
+  margin: 0;
+}
+.view-pricing-tables .views-field-field-mt-prd-price {
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.view-pricing-tables .pricing-table .item-list>ul {
+  list-style: none;
+  margin: 0;
+}
+.view-pricing-tables .views-row:not(.most-popular) .views-field-field-mt-prd-most-popular {
+  display: none;
+}
+.views-field-field-mt-prd-most-popular {
+  background-color: #2fb134;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-align: center;
+  padding: 5px 10px;
+}
+.region--light-typography .views-field-field-mt-prd-most-popular {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.view-pricing-tables .pricing-table .item-list li {
+  margin: 0;
+}
+.view-pricing-tables .pricing-table .views-field-item {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+.view-pricing-tables .pricing-table-footer {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  padding: 30px 0 25px;
+}
+.view-pricing-tables .pricing-table-footer .button {
+  margin-bottom: 0;
+  font-size: 18px;
+}
+@media (min-width: 767px) {
+  .view-pricing-tables .pricing-table {
+    height: 100%;
+    padding: 0 30px 130px 30px;
+  }
+}
+@media (min-width: 1200px) {
+  .view-pricing-tables .pricing-table .views-field-title {
+    font-size: 40px;
+  }
+}

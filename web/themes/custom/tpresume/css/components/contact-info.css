@@ -1,0 +1,148 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's contact info block.
+ */
+.contact-info .icon {
+  margin: 0 auto 20px;
+  text-align: center;
+  display: block;
+  color: #575757;
+}
+.contact-info .icon .svg-inline--fa {
+  color: #d2d2d2;
+  line-height: 1;
+  font-size: 75px;
+}
+.contact-info ul,
+ul.contact-info {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+}
+.contact-info li {
+  overflow-wrap: break-word;
+  padding-left: 50px;
+  position: relative;
+  margin-bottom: 35px;
+  font-size: 14px;
+}
+.contact-info li > .svg-inline--fa {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  font-size: 16px;
+  width: 22px;
+  text-align: left;
+}
+.slideout__section .contact-info li {
+  padding: 0 0 25px 25px;
+  min-height: 0;
+  position: relative;
+}
+.slideout__section .contact-info li > .svg-inline--fa {
+  top: 5px;
+  font-size: 15px;
+  line-height: 1;
+  width: 20px;
+  height: auto;
+  text-align: left;
+  color: #878787;
+  background-color: transparent;
+}
+
+/*colored regions*/
+.region--light-typography .contact-info .icon {
+  background-color: #ffffff;
+  color: #575757;
+}
+.region--light-typography .contact-info li .svg-inline--fa {
+  color: #ffffff;
+}
+.region--light-typography .slideout__section .contact-info li .svg-inline--fa {
+  background-color: transparent;
+}
+.region--light-typography.region--dark-background .slideout__section .contact-info li .svg-inline--fa,
+.region--light-typography.region--black-background .slideout__section .contact-info li .svg-inline--fa,
+.region--light-typography.region--colored-background .slideout__section .contact-info li .svg-inline--fa {
+  color: #ffffff;
+}
+
+/*contact info items grid*/
+.block + .block .contact-info-items-grid {
+  border-top-style: solid;
+  border-width: 2px;
+  border-color: #f2f4f6;
+  margin-top: 45px;
+  padding-top: 50px;
+}
+.contact-info-items-grid .contact-info-item {
+  min-height: 160px;
+  padding-top: 30px;
+}
+.contact-info-items-grid .contact-info-item.contact-info-item--bordered {
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #f2f4f6;
+}
+.contact-info-items-grid .contact-info-item__icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+  line-height: 1;
+}
+.contact-info-items-grid .contact-info-item__text {
+  font-size: 20px;
+  line-height: 1.2;
+}
+.region--dark-typography .contact-info-items-grid .contact-info-item__icon {
+  color: #e6e6e6;
+}
+.region--light-typography .contact-info-items-grid .contact-info-item.contact-info-item--bordered,
+.region--light-typography .block + .block .contact-info-items-grid {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/*company info (header top)*/
+.company-info {
+  padding-top: 10px;
+}
+@media (max-width: 767px) {
+  .company-info {
+    padding-bottom: 10px;
+  }
+}
+
+/*company info (footer top)*/
+.contact-info__text-primary {
+  font-size: 40px;
+  margin: 0 0 10px 0;
+}
+.contact-info__text-secondary {
+  font-size: 30px;
+  margin: 10px 0 10px 0;
+}
+@media (max-width: 575px) {
+  .contact-info__text-primary {
+    font-size: 24px;
+  }
+  .contact-info__text-secondary {
+    font-size: 20px;
+  }
+}
+
+/* company info (footer) */
+.footer__section .contact-info li {
+  margin-bottom: 10px;
+}
+@media (max-width: 767px) {
+  .footer__section .contact-info li {
+    padding-left: 0;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .footer__section .contact-info li > .svg-inline--fa {
+      position: static;
+      display: block;
+      text-align: center;
+      margin: 0 auto 5px;
+  }
+}

@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * TpISENTResume's theme implementation to display a Product node.
+ */
+#}
+
+{% extends "node.html.twig" %}
+{% block content %}
+  {{ attach_library('tpresume/node-product') }}
+  {% if content.field_mt_prd_image|render or content.field_mt_prd_subheader_body|render or content.field_mt_prd_buy_link|render or content.field_mt_prd_price|render %}
+  <div class="product-content-top">
+    {% if content.field_mt_prd_image|render %}
+      <div class="product-content-top-first">
+        {{ content.field_mt_prd_image }}
+      </div>
+    {% endif %}
+    {% if content.field_mt_prd_subheader_body|render or content.field_mt_prd_buy_link|render or content.field_mt_prd_price|render or content.field_mt_prd_product_code|render or content.field_mt_prd_availability|render %}
+      <div class="product-content-top-second">
+        {{ content.field_mt_prd_subheader_body }}
+        {{ content.field_mt_prd_price }}
+        {{ content.field_mt_prd_buy_link }}
+        {% if content.field_mt_prd_product_code|render or content.field_mt_prd_availability|render %}
+          <div class="row justify-content-center">
+            {% if content.field_mt_prd_product_code|render %}
+              <div class="col-auto">
+                {{ content.field_mt_prd_product_code }}
+              </div>
+            {% endif %}
+            {% if content.field_mt_prd_availability|render %}
+              <div class="col-auto">
+                {{ content.field_mt_prd_availability }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  {% endif %}
+  {{ content|without('field_mt_prd_banner_carousel', 'field_mt_prd_image', 'field_mt_prd_subheader_body', 'field_mt_prd_buy_link', 'field_mt_prd_price', 'field_mt_prd_product_code', 'field_mt_prd_availability') }}
+{% endblock %}

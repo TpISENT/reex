@@ -1,0 +1,80 @@
+/**
+ * @file
+ * Visual styles for Directory+'s testimonials grid views.
+ */
+.view-testimonials-grid .views-row {
+  margin: 0 0 60px 0;
+  border-radius: 5px;
+}
+.view-testimonials-grid .views-row:after {
+  display: block;
+  clear: both;
+  content: "";
+}
+.view-testimonials-grid .views-field-field-mt-tst-testimonial-image {
+  text-align: center;
+}
+.view-testimonials-grid .views-field-field-mt-tst-body {
+  padding-bottom: 10px;
+}
+.region--dark-typography .view-testimonials-grid .views-field-field-mt-tst-body {
+  color: #424242;
+}
+.view-testimonials-grid .views-field-field-mt-tst-body p {
+  padding: 0;
+  position: relative;
+  margin-bottom: 10px;
+}
+.view-testimonials-grid .views-field-field-mt-tst-body p:first-child:after {
+  position: absolute;
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: "\f10d";
+  left: 0px;
+  top: -17px;
+  color: rgba(112, 112, 112, 0.07);
+  font-size: 48px;
+  font-style: normal;
+  line-height: 1;
+  z-index: -1;
+}
+.region--light-typography .view-testimonials-grid .views-field-field-mt-tst-body p:first-child:after {
+  color: rgba(255, 255, 255, 0.24);
+}
+.view-testimonials-grid .views-field-title a {
+  margin: 0;
+  font-size: 14px;
+  position: relative;
+  z-index: 1;
+}
+.headings-wide-spacing-enabled .view-testimonials-grid .views-field-title {
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.view-testimonials-grid .views-field-field-mt-tst-subtitle {
+  font-size: 12px;
+  position: relative;
+  z-index: 1;
+}
+.region--dark-typography .view-testimonials-grid .views-field-field-mt-tst-subtitle {
+  color: #939393;
+}
+@media (min-width: 768px) {
+  .view-testimonials-grid .views-field-field-mt-tst-testimonial-image {
+    margin-right: 25px;
+    float: left;
+    max-width: 70px;
+    max-height: 70px;
+  }
+  .view-testimonials-grid .views-field-field-mt-tst-testimonial-image ~ .views-field-title,
+  .view-testimonials-grid .views-field-field-mt-tst-testimonial-image ~ .views-field-field-mt-tst-subtitle {
+    margin-left: 95px;
+  }
+}
+@media (max-width: 767px) {
+  .view-testimonials-grid .views-field-field-mt-tst-testimonial-image .views-field-field-image {
+    max-width: 70px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+}

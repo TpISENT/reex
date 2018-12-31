@@ -1,0 +1,111 @@
+/**
+ * @file
+ * Visual styles for mt_highlight paragraphs type in Directory+.
+ */
+.field--type-entity-reference-revisions > .field__item {
+  clear: both;
+}
+.field--type-entity-reference-revisions > .field__item:last-child {
+  margin-bottom: 30px;
+}
+.field--type-entity-reference-revisions > .field__item:last-child:after {
+  clear: both;
+  display: table;
+  content: " ";
+}
+.paragraph--type--mt-highlight {
+  padding: 1.8em 0;
+}
+.paragraph--type--mt-highlight:before,
+.paragraph--type--mt-highlight:after {
+  display: table;
+  content: " ";
+}
+.paragraph--type--mt-highlight:after {
+  clear: both;
+}
+.field--name-field-mt-highlight-title {
+  font-size: 28px;
+  line-height: 1.20;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  text-align: center;
+}
+@media (min-width:992px) {
+  .field--name-field-mt-highlight-title {
+    font-size: 48px;
+  }
+}
+@media (min-width:1200px) {
+  .field--name-field-mt-highlight-title {
+    font-size: 60px;
+  }
+}
+.field--name-field-mt-highlight-body {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.field__item .field--name-field-mt-highlight-body:after {
+  clear: none;
+}
+.field--name-field-mt-highlight-link {
+  text-align: center;
+}
+.field--name-field-mt-highlight-link a {
+  font-size: 18px;
+  padding: 15px 25px;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin: 10px 0;
+  text-align: center;
+  background-color: transparent;
+  color: #ffffff;
+}
+.headings-wide-spacing-enabled .node--type-mt-product .field--name-field-mt-highlight-link a {
+  letter-spacing: 0.25em;
+}
+.field--name-field-mt-highlight-link a:hover,
+.field--name-field-mt-highlight-link a:focus {
+  color: #ffffff;
+}
+@media (max-width: 767px) {
+  .field--name-field-mt-highlight-title {
+    padding-top: 20px;
+  }
+}
+@media (min-width: 768px) { 
+  .paragraph--type--mt-highlight .field--name-field-mt-highlight-image {
+    width: 48%;
+  }
+  .field__item:nth-child(even) .field--name-field-mt-highlight-image {
+    float: left;
+  }
+  .field__item:nth-child(even) .field--name-field-mt-highlight-title,
+  .field__item:nth-child(even) .field--name-field-mt-highlight-body,
+  .field__item:nth-child(even) .field--name-field-mt-highlight-link {
+    margin-left: 52%;
+  }
+  .field__item:nth-child(odd) .field--name-field-mt-highlight-image {
+    float: right;
+  }
+  .field__item:nth-child(odd) .field--name-field-mt-highlight-title,
+  .field__item:nth-child(odd) .field--name-field-mt-highlight-body,
+  .field__item:nth-child(odd) .field--name-field-mt-highlight-link {
+    margin-right: 52%;
+  }
+  .field--name-field-mt-highlight-link a {
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1200px) { 
+  .field--name-field-mt-highlight-title {
+    margin-bottom: 0;
+  }
+}

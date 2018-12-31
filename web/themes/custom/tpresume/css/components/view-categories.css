@@ -1,0 +1,70 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's categories views implementations.
+ */
+ .view-mt-categories .view-mt-category-item {
+  color: #ffffff;
+  text-align: center;
+  height: 100%;
+  padding: 15px 5px 10px;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+  border-bottom-color:  transparent;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+.view-mt-categories .view-mt-category-item a {
+  position: absolute;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+.view-mt-categories .view-mt-category-item img {
+  margin: 0 auto;
+}
+.view-mt-categories .view-mt-category-item .views-field-field-mt-category-icon {
+  font-size: 32px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.view-mt-categories .view-mt-category-item .views-field-field-mt-category-image {
+  margin-bottom: 10px;
+}
+.view-mt-categories .view-mt-category-item .views-field-name {
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.layout-one-sidebar .view-mt-categories .view-mt-category-item .views-field-name {
+  font-size: 11px;
+}
+.view-mt-categories .view-mt-category-item .views-field-nid {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+@media (max-width: 1199px) {
+  .view-mt-categories .view-mt-category-item .views-field-name {
+    font-size: 14px;
+  }
+}
+@media (max-width: 991px) {
+  .view-mt-categories .view-mt-category-item .views-field-name {
+    font-size: 11px;
+  }
+}
+
+/*View categories @colored regions*/
+.region--light-typography .view-mt-categories .view-mt-category-item {
+  background-color: transparent;
+  border: 1px solid #ffffff;
+}
+.region--light-typography .view-mt-categories .view-mt-category-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+}

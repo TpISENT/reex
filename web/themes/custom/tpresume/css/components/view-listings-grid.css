@@ -1,0 +1,112 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's view listings grid views.
+ */
+.view-listings-grid .views-row {
+  margin: 30px 0;
+}
+.view-listings-grid .view-listings-grid-item {
+  background-color: #fff;
+  border-width: 0 0 2px 0;
+  border-style: solid;
+  border-color: #e1e1e1;
+  -moz-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.35);
+  -o-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.35);
+  -webkit-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.35);
+  box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.35);
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.view-listings-grid .view-listings-grid-item:hover {
+  -moz-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.95);
+  -o-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.95);
+  -webkit-box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.95);
+  box-shadow: 0px 1px 5px rgba(204, 204, 204, 0.95);
+}
+.view-listings-grid .views-field-field-mt-lst-image {
+  position: relative;
+  overflow: hidden;
+}
+.view-listings-grid .views-field-field-mt-lst-image .views-field-title {
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
+  width: 100%;
+  background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,1)));
+  background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+  background: -o-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+  background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,1) 100%);
+}
+.view-listings-grid .views-field-title a {
+  clear: both;
+  padding: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+}
+.view-listings-grid .views-field-field-mt-lst-image .views-field-title a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 30px 15px 10px;
+}
+.view-listings-grid .views-field-field-mt-lst-image .categories-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 11;
+}
+.view-listings-grid .categories-container a {
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 8px 20px;
+  color: #ffffff;
+  display: inline-block;
+  text-decoration: none;
+  background-color: #a1a1a1;
+}
+.view-listings-grid .categories-container a:hover {
+  text-decoration: none;
+}
+.view-listings-grid .ribbon {
+  background-color: #333333;
+  color: #ffffff;
+  position: absolute;
+  top: 21px;
+  right: -38px;
+  z-index: 10;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(39deg);
+  font-size: 12px;
+  text-transform: uppercase;
+  width: 150px;
+  text-align: center;
+}
+.views-field-field-mt-lst-address-container {
+  position: relative;
+}
+.views-field-field-mt-lst-address-inner {
+  font-size: 15px;
+  line-height: 1.2;
+  color: #707070;
+  padding: 20px;
+  text-align: center;
+}
+.views-field-field-mt-lst-address-container .target-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+@media (min-width: 1200px) {
+  .views-field-field-mt-lst-address-inner {
+    width: 60%;
+    margin: 0 auto;
+  }
+}

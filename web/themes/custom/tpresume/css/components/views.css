@@ -1,0 +1,190 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's views.
+ */
+.views-field-title a {
+  display: block;
+}
+
+/*more links*/
+.view > .more-link a {
+  margin: 0 0 10px 0px;
+  display: inline-block;
+  background-color: transparent;
+  padding:0;
+  text-align: left;
+  border: none;
+  text-decoration: none;
+  font-size: 18px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+.region--dark-typography .view > .more-link a {
+  color: #000000;
+}
+.region--dark-background .view > .more-link a,
+.region--colored-background .view > .more-link a {
+  border-color: #000000;
+}
+.region--dark-typography .view > .more-link a:hover {
+  color: #000000;
+  border-color: transparent;
+}
+.region--light-typography .view > .more-link a {
+  border-color: #ffffff;
+}
+.region--light-typography .view > .more-link a:hover {
+  border-color: transparent;
+}
+.headings-wide-spacing-enabled .view > .more-link a {
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.col-12 .view > .more-link {
+  text-align: center;
+}
+.col-12 .view > .more-link a {
+  padding: 8px 25px;
+  font-size: 18px;
+  border-width: 1px;
+  border-style: solid;
+  display: inline-block;
+  text-decoration: none;
+  background-color: transparent;
+  min-width: 270px;
+  text-align: center;
+}
+.col-12 .view > .more-link a:hover,
+.col-12 .view > .more-link a:focus {
+  text-decoration: none;
+  color: #ffffff;
+}
+.col-12 .view > .more-link a:after {
+  content: "";
+}
+.region--dark-background .col-12 .view > .more-link a:hover,
+.region--dark-background .col-12 .view > .more-link a:focus {
+  background: #ffffff;
+  color: #424242;
+}
+.region--colored-background .col-12 .view > .more-link a {
+  background: #ffffff;
+  color: #424242;
+}
+.region--colored-background .col-12 .view > .more-link a:hover,
+.region--colored-background .col-12 .view > .more-link a:focus {
+  color: #ffffff;
+}
+
+/*more links @sidebars and footer regions*/
+.footer__section .view > .more-link a {
+  margin: 10px 0 0;
+  text-transform: none;
+}
+
+/*clear grid floats*/
+.view.row .view-content:before,
+.view.row .view-content:after {
+  display: table;
+  content: " ";
+}
+.view.row .view-content:after {
+  clear: both;
+}
+
+/* view listings grid filters */
+.view-listings-grid .view-filters {
+  background-color: rgba(240, 240, 240, 0.95);
+}
+.view-listings-grid .view-filters .views-exposed-form {
+  background-color: transparent;
+  padding: 20px 15px;
+}
+.view-listings-grid .view-filters .views-exposed-form .form--inline {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  -ms-flex-pack: center!important;
+  justify-content: center!important;
+}
+.view-listings-grid .view-filters .views-exposed-form .form-item,
+.view-listings-grid .view-filters .views-exposed-form .form-actions {
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin: 0;
+  float: none;
+  margin-bottom: 20px;
+}
+@media (min-width: 768px) {
+  .view-listings-grid .view-filters .views-exposed-form .form-item,
+  .view-listings-grid .view-filters .views-exposed-form .form-actions {
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+    margin-bottom: 0;
+  }
+  .view-featured-listings-grid .view-filters .views-exposed-form .form-item,
+  .view-featured-listings-grid .view-filters .views-exposed-form .form-actions,
+  .view-sponsored-listings-grid .view-filters .views-exposed-form .form-item,
+  .view-sponsored-listings-grid .view-filters .views-exposed-form .form-actions {
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+  }
+}
+@media (min-width: 1200px) {
+  .view-listings-grid .view-filters .views-exposed-form {
+    width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .container .view-listings-grid .view-filters .views-exposed-form {
+    width: auto;
+  }
+}
+.view-listings-grid .view-filters .views-exposed-form .form-item select {
+  margin: 0;
+}
+.view-listings-grid .view-filters .views-exposed-form .form-actions {
+  margin-top: 0;
+}
+.view-listings-grid .view-filters .views-exposed-form .form-actions input[type="submit"] {
+  min-width: 100%;
+  width: 100%;
+  margin: 27px 0 0 0;
+}
+.view-listings-grid .view-filters label {
+  font-size: 11px;
+  color: rgba(63, 63, 63, 0.5);
+  text-transform: uppercase;
+  font-weight: 400;
+  text-align: left;
+}
+
+/* exposed filters block */
+.views-exposed-form.block .form-item {
+  margin: 0 0 15px;
+  float: none;
+}
+.views-exposed-form.block .form-item label {
+  font-size: 11px;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-align: left;
+}
+.views-exposed-form.block .form-item select {
+  margin: 0;
+}
+.views-exposed-form.block .form-actions {
+  text-align: right;
+  padding-bottom: 15px;
+}

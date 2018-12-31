@@ -1,0 +1,94 @@
+/**
+ * @file
+ * Visual styles for TpISENTResume's view listings map views.
+ */
+.region--white-background .view-mt-listings-map .view-filters {
+  background-color: rgba(240, 240, 240, 0.95);
+}
+.view-mt-listings-map .view-filters .views-exposed-form {
+  background-color: transparent;
+  padding: 20px 15px;
+}
+.view-mt-listings-map .view-filters .views-exposed-form .form--inline {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  -ms-flex-pack: center!important;
+  justify-content: center!important;
+}
+.view-mt-listings-map .view-filters .views-exposed-form .form-item,
+.view-mt-listings-map .view-filters .views-exposed-form .form-actions {
+  -ms-flex: 0 0 100%;
+  flex: 0 0 100%;
+  max-width: 100%;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin: 0;
+  float: none;
+  margin-bottom: 20px;
+}
+@media (min-width: 768px) {
+  .view-mt-listings-map .view-filters .views-exposed-form .form-item,
+  .view-mt-listings-map .view-filters .views-exposed-form .form-actions {
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+    margin-bottom: 0;
+  }
+}
+@media (min-width: 1200px) {
+  .view-mt-listings-map .view-filters .views-exposed-form {
+    width: 1140px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .container .view-mt-listings-map .view-filters .views-exposed-form {
+    width: auto;
+  }
+}
+.view-mt-listings-map .view-filters .views-exposed-form .form-item select {
+  margin: 0;
+}
+.view-mt-listings-map .view-filters .views-exposed-form .form-actions {
+  margin-top: 0;
+}
+.view-mt-listings-map .view-filters .views-exposed-form .form-actions input[type="submit"] {
+  min-width: 100%;
+  width: 100%;
+  margin: 27px 0 0 0;
+}
+.view-mt-listings-map .view-filters label {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 400;
+  text-align: left;
+}
+.region--dark-typography .view-mt-listings-map .view-filters label {
+  color: rgba(63, 63, 63, 0.5);
+}
+
+/* map popups */
+.view-mt-listings-map .views-field-title a {
+  padding: 15px 0 15px 25px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #3f3f3f;
+  display: block;
+}
+.view-mt-listings-map .views-field-field-mt-lst-image {
+  margin-bottom: 10px;
+  padding-left: 25px;
+}
+.view-mt-listings-map .views-field-view-node {
+  font-size: 14px;
+  text-align: right;
+  display: block;
+  margin-bottom: 10px;
+}

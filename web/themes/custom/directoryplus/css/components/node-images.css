@@ -1,0 +1,81 @@
+/**
+ * @file
+ * Visual styles for Directory+'s images.
+ */
+.circle-img {
+  display: block;
+  text-align: center;
+}
+.circle-img img {
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  border-radius: 100%;
+}
+.images-container {
+  margin-bottom: 30px;
+}
+.node-mt-slideshow-entry .field--type-image {
+  margin: 0 0 20px 0;
+}
+.image-preview {
+  overflow: hidden;
+  position: relative;
+}
+.node--view-mode-teaser .field--type-image img:hover {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+  -webkit-transition: opacity linear 0.2s;
+  -moz-transition: opacity linear 0.2s;
+  -o-transition: opacity linear 0.2s;
+  -ms-transition: opacity linear 0.2s;
+  transition: opacity linear 0.2s;
+}
+.image-caption h4 {
+  font-size: 14px;
+  color: #7d7d7d;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 10px 0 5px;
+  text-align: left;
+}
+
+/*image listing*/
+.image-listing-items {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+  margin-top: 20px;
+}
+.image-listing-item {
+  -ms-flex: 0 0 25%;
+  flex: 0 0 25%;
+  max-width: 25%;
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-bottom: 15px;
+  border-right: 1px solid #ebebeb;
+}
+.image-listing-item:nth-child(4n),
+.image-listing-item:last-child {
+  border-right: none;
+}
+@media (max-width:767px) {
+  .images-container {
+    margin-bottom: 10px;
+  }
+}
+
+/*overlay of image listing items*/
+.image-listing-item .svg-inline--fa {
+  font-size: 24px;
+  height: 100%;
+}
+.image-listing-item .overlay-inner {
+  margin-top: -25px;
+}

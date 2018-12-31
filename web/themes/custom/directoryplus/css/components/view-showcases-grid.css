@@ -1,0 +1,44 @@
+/**
+ * @file
+ * Visual styles for Directory+'s showcases grid views.
+ */
+.view-showcases-grid .views-row {
+  margin: 0 0 15px;
+  position: relative;
+}
+.view-showcases-grid .views-field-field-mt-prd-image {
+  margin-bottom: 20px;
+}
+.headings-wide-spacing-enabled .view-showcases-grid .views-field-title h5 {
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+.view-showcases-grid .views-field-title h5 a:hover {
+  text-decoration: none;
+}
+.region--light-typography .view-showcases-grid .views-field-title h5 a {
+  color: #ffffff;
+}
+.region--light-typography .view-showcases-grid .views-field-title h5 a:hover {
+  color: #ffffff;
+}
+.view-showcases-grid .views-field-field-mt-prd-price {
+  font-size: 18px;
+  margin: 0px 0 10px 0;
+  font-weight: 700;
+}
+.view-showcases-grid .views-field-view-node-1 a {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* overlay */
+.view-showcases-grid .views-row > .overlay-container {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  top: -15px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
