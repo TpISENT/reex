@@ -44,7 +44,7 @@ a.button.button--outline:focus,
 .region--light-typography a.button.button--outline,
 .region--light-typography .button.button--outline > a {
   background-color: transparent;
-  border-color: #ffffff;
+  border-color: #df8601;
   color: #ffffff;
 }
 .headings-wide-spacing-enabled a.button,
@@ -89,9 +89,9 @@ input[type="button"]:focus {
 .region--light-typography input[type="reset"],
 .region--light-typography input[type="button"],
 .region--light-typography input[type="button"] {
-  border-color: #ffffff;
+  border-color: #df8601;
   color: #ffffff;
-  background-color: transparent;
+  background-color: #df8601;
 }
 .region--light-typography a.button:hover,
 .region--light-typography a.button:focus,
@@ -103,7 +103,7 @@ input[type="button"]:focus {
 .region--light-typography input[type="reset"]:focus,
 .region--light-typography input[type="button"]:hover,
 .region--light-typography input[type="button"]:focus {
-  background-color: #ffffff;
+  background-color: #ECB206;
   color: #555555;
 }
 span.button-operator {
@@ -147,5 +147,5 @@ a.button.button--hover-style-2:focus:before,
 }
 .region--light-typography a.button.button--hover-style-2:before,
 .region--light-typography .button.button--hover-style-2 > a:before {
-  background-color: #ffffff;
+  background-color: #ECB206;
 }

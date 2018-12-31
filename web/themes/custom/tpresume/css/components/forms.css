@@ -264,3 +264,6 @@ input[type="checkbox"] {
 :-ms-input-placeholder {
   color: #898989;
 }
+.webform-submission-newsletter-subscription-form .form-actions {
+    margin: 0px;
+}
