@@ -22,31 +22,28 @@
   GeolocationGoogleMapWidget.prototype = Object.create(Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype);
   GeolocationGoogleMapWidget.prototype.constructor = GeolocationGoogleMapWidget;
   GeolocationGoogleMapWidget.prototype.addMarker = function (location, delta) {
-    try {
-      Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(this, location, delta);
-    }
-    catch (Error) {
-      return;
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(this, location, delta);
+
+    var that = this;
+
+    // delta could legally be '0'.
+    if (typeof delta === 'undefined') {
+      delta = this.getNextDelta();
     }
 
     var marker = this.map.setMapMarker({
-      position: location
+      position: location,
+      title: Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
+        '@delta': delta.toString(),
+        '@latitude': location.lat,
+        '@longitude': location.lng
+      }),
+      setMarker: true,
+      label: (delta + 1).toString(),
+      delta: delta,
+      draggable: true
     });
-    marker = this.initializeMarker(marker, delta);
 
-    return marker;
-  };
-  GeolocationGoogleMapWidget.prototype.initializeMarker = function (marker, delta) {
-    var location = marker.getPosition();
-    marker.setTitle(Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
-      '@delta': delta,
-      '@latitude': location.lat(),
-      '@longitude': location.lng()
-    }));
-    marker.setDraggable(true);
-    marker.setLabel((delta + 1).toString());
-
-    var that = this;
     marker.addListener('dragend', function(e) {
       that.updateInput({lat: Number(e.latLng.lat()), lng: Number(e.latLng.lng())}, marker.delta);
     });
@@ -62,7 +59,7 @@
   GeolocationGoogleMapWidget.prototype.updateMarker = function (location, delta) {
     Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.updateMarker.call(this, delta);
 
-    /** @param {google.map.Marker} marker */
+    /** @param {GoogleMarker} marker */
     var marker = this.getMarkerByDelta(delta);
     marker.setPosition(location);
 

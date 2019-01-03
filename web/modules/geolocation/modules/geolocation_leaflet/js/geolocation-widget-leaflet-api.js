@@ -22,33 +22,29 @@
   GeolocationLeafletMapWidget.prototype = Object.create(Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype);
   GeolocationLeafletMapWidget.prototype.constructor = GeolocationLeafletMapWidget;
   GeolocationLeafletMapWidget.prototype.addMarker = function (location, delta) {
-    try {
-      Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(this, location, delta);
-    }
-    catch (Error) {
-      return;
+    Drupal.geolocation.widget.GeolocationMapWidgetBase.prototype.addMarker.call(this, location, delta);
+
+    var that = this;
+
+    // delta could legally be '0'.
+    if (typeof delta === 'undefined') {
+      delta = this.getNextDelta();
     }
 
     var marker = this.map.setMapMarker({
-      position: location
+      position: location,
+      title: Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
+        '@delta': delta.toString(),
+        '@latitude': location.lat,
+        '@longitude': location.lng
+      }),
+      setMarker: true,
+      draggable: true
     });
-    marker = this.initializeMarker(marker, delta);
+    marker.delta = delta;
 
-    return marker;
-  };
-  GeolocationLeafletMapWidget.prototype.initializeMarker = function (marker, delta) {
-    var location = marker.getLatLng();
-    marker.setPopupContent(Drupal.t('[@delta] Latitude: @latitude Longitude: @longitude', {
-      '@delta': delta,
-      '@latitude': location.lat,
-      '@longitude': location.lng
-    }));
-    marker.dragging.enable();
-
-    var that = this;
     marker.on('dragend', function(e) {
-      var latLng = e.target.getLatLng();
-      that.updateInput({lat: latLng.lat, lng: latLng.lng}, marker.delta);
+      that.updateInput({lat: Number(e.latlng.lat), lng: Number(e.latlng.lng)}, marker.delta);
     });
 
     marker.on('click', function() {

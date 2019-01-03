@@ -2,17 +2,18 @@
 
 namespace Drupal\Tests\geolocation\FunctionalJavascript;
 
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 
 /**
- * Tests the Token Formatter functionality.
+ * Tests the Google Geocoder Token Formatter functionality.
  *
  * @group geolocation
  */
-class GeolocationTokenFormatterTest extends GeolocationJavascriptTestBase {
+class GeolocationTokenFormatterTest extends JavascriptTestBase {
 
   /**
    * {@inheritdoc}
@@ -22,6 +23,7 @@ class GeolocationTokenFormatterTest extends GeolocationJavascriptTestBase {
     'field',
     'filter',
     'geolocation',
+    'geolocation_google_maps',
   ];
 
   /**
@@ -47,7 +49,7 @@ class GeolocationTokenFormatterTest extends GeolocationJavascriptTestBase {
 
     EntityFormDisplay::load('node.article.default')
       ->setComponent('field_geolocation', [
-        'type' => 'geolocation_latlng',
+        'type' => 'geolocation_googlegeocoder',
       ])
       ->save();
 

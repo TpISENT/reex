@@ -6,9 +6,8 @@ package: Geolocation
 dependencies:
   - geolocation
   - geofield
-
-# Information added by Drupal.org packaging script on 2018-07-17
-version: '8.x-2.0-beta1+74-dev'
+# Information added by Drupal.org packaging script on 2018-01-13
+version: '8.x-2.0-beta1'
 core: '8.x'
 project: 'geolocation'
-datestamp: 1531868026
+datestamp: 1515803593

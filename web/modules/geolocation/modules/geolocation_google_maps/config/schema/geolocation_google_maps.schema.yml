@@ -9,10 +9,10 @@ geolocation_google_maps.settings:
       type: string
       label: 'Google Maps API Key'
     use_current_language:
-      type: boolean
+      type: integer
       label: 'Use current language'
     china_mode:
-      type: boolean
+      type: integer
       label: 'China mode'
     google_map_custom_url_parameters:
       type: mapping
@@ -36,6 +36,14 @@ geolocation_google_maps.settings:
           sequence:
             type: string
             label: 'Library name'
+
+views.style.maps_common:
+  type: geolocation_views_style
+  label: 'Geolocation CommonMap'
+  mapping:
+    google_map_settings:
+      type: geolocation.map_provider.google_maps
+      label: 'Google Map settings'
 
 geolocation.geocoder.google_geocoding_api:
   type: geolocation_geocoder
@@ -69,13 +77,13 @@ geolocation.map_provider.google_maps:
       type: string
       label: 'Google map type'
     zoom:
-      type: integer
+      type: string
       label: 'Zoom level'
     minZoom:
-      type: integer
+      type: string
       label: 'Min Zoom'
     maxZoom:
-      type: integer
+      type: string
       label: 'Max Zoom'
     rotateControl:
       type: boolean
@@ -84,7 +92,7 @@ geolocation.map_provider.google_maps:
       type: boolean
       label: 'Scrool wheel'
     disableDoubleClickZoom:
-      type: boolean
+      type: string
       label: 'Disable double click zoom'
     height:
       type: string
@@ -92,6 +100,15 @@ geolocation.map_provider.google_maps:
     width:
       type: string
       label: 'Width value'
+    info_auto_display:
+      type: boolean
+      label: 'Display info'
+    disableAutoPan:
+      type: boolean
+      label: 'Disable automatic panning for info window'
+    style:
+      type: string
+      label: 'JSON encoded style'
     preferScrollingToZooming:
       type: boolean
       label: 'Require user to click map before zooming'

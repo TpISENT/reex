@@ -1,6 +1,6 @@
 /**
  * @file
- * Javascript for the Geolocation map widget.
+ * Javascript for the Geolocation map formatter.
  */
 
 (function ($, Drupal) {
@@ -8,25 +8,28 @@
   'use strict';
 
   /**
-   * Generic widget behavior.
+   * Find and display all maps.
    *
    * @type {Drupal~behavior}
-   * @type {Object} drupalSettings.geolocation
    *
    * @prop {Drupal~behaviorAttach} attach
-   *   Attaches Geolocation widget functionality to relevant elements.
+   *   Attaches Geolocation Maps formatter functionality to relevant elements.
    */
   Drupal.behaviors.geolocationWidget = {
     attach: function (context, drupalSettings) {
-      $('.geolocation-map-widget', context).once('geolocation-widget-processed').each(function (index, item) {
+      $('.geolocation-map-widget', context).each(function (index, item) {
 
+        /** @type {GeolocationMapWidgetSettings} widgetSettings */
         var widgetSettings = {};
         var widgetWrapper = $(item);
         widgetSettings.wrapper = widgetWrapper;
-        widgetSettings.id = widgetWrapper.attr('id').toString();
-        widgetSettings.type = widgetWrapper.data('widget-type').toString();
+        widgetSettings.id = widgetWrapper.attr('id');
+        widgetSettings.type = widgetWrapper.data('widget-type');
 
-        if (widgetWrapper.length === 0) {
+        if (
+          widgetWrapper.length === 0
+          || widgetWrapper.hasClass('geolocation-widget-processed')
+        ) {
           return;
         }
 
@@ -38,7 +41,6 @@
         }
 
         if (typeof drupalSettings.geolocation.widgetSettings[widgetSettings.id] !== 'undefined') {
-          /** @type {GeolocationMapWidgetSettings} widgetSettings */
           widgetSettings = $.extend(drupalSettings.geolocation.widgetSettings[widgetSettings.id], widgetSettings);
         }
 
@@ -61,26 +63,8 @@
           }
         }
 
-        widget.map.addPopulatedCallback(function (map) {
-          $.each(map.mapMarkers, function (index, item) {
-            item.delta = index;
-          });
-
-          if (
-            widgetSettings.autoClientLocationMarker
-            && navigator.geolocation && window.location.protocol === 'https:'
-          ) {
-            navigator.geolocation.getCurrentPosition(function (currentPosition) {
-              widget.addMarker({
-                lat: currentPosition.coords.latitude,
-                lng: currentPosition.coords.longitude
-              }, widget.getNextDelta());
-            });
-          }
-        });
-
-        widget.getAllInputs().each(function(index, inputElement) {
-          var input = $(inputElement);
+        widget.getAllInputs().each(function(index, input) {
+          input = $(input);
           var delta = widget.getAllInputs().index(input);
           var longitude = input.find('input.geolocation-map-input-longitude');
           var latitude = input.find('input.geolocation-map-input-latitude');
@@ -122,6 +106,13 @@
           });
         });
 
+        widgetWrapper.addClass('geolocation-widget-processed');
+
+        widget.map.addReadyCallback(function (map) {
+          widget.loadMarkersFromInput();
+          widget.map.fitMapToMarkers();
+        });
+
         // Add the click responders for setting the value.
         var singleClick;
 
@@ -129,23 +120,11 @@
 
           // Create 500ms timeout to wait for double click.
           singleClick = setTimeout(function () {
-            if (widgetSettings.cardinality === 1) {
-              widget.updateInput(location, 0);
-              widget.updateMarker(location, 0);
-              widget.locationAddedCallback(location);
-            }
-            else {
-              var delta = widget.getNextDelta();
-              if (
-                  typeof delta === 'undefined'
-                  || delta === false
-              ) {
-                alert(Drupal.t('Maximum number of entries reached.'));
-                throw Error('Maximum number of entries reached.');
-              }
+            var delta = widget.getNextDelta();
+            if (delta || delta === 0) {
               widget.addInput(location);
               widget.addMarker(location, delta);
-              widget.locationAddedCallback(location);
+              widget.locationAddedCallback(location, delta);
             }
           }, 500);
 

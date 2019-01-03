@@ -22,7 +22,7 @@ class DataProvider extends Plugin {
   public $id;
 
   /**
-   * The name of the DataProvider.
+   * The name of the MapProvider.
    *
    * @var \Drupal\Core\Annotation\Translation
    *
@@ -31,7 +31,7 @@ class DataProvider extends Plugin {
   public $name;
 
   /**
-   * The description of the DataProvider.
+   * The description of the MapProvider.
    *
    * @var \Drupal\Core\Annotation\Translation
    *

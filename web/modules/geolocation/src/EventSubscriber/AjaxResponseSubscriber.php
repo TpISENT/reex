@@ -6,7 +6,6 @@ use Drupal\views\Ajax\ViewAjaxResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Drupal\geolocation\Plugin\views\style\CommonMapBase;
 
 /**
  * Response subscriber to handle AJAX responses.
@@ -29,7 +28,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
 
     $view = $response->getView();
 
-    if (!is_a($view->getStyle(), CommonMapBase::class)) {
+    if ($view->getStyle()->getPluginId() !== 'maps_common') {
       // This view is not of maps_common style, but maybe an attachment is.
       $common_map_attachment = FALSE;
 
@@ -37,10 +36,9 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
       foreach ($attached_display_ids as $display_id) {
         $current_display = $view->displayHandlers->get($display_id);
         if (!empty($current_display)) {
-          $current_style = $current_display->getPlugin('style');
           if (
-            !empty($current_style)
-            && is_a($current_style, CommonMapBase::class)
+            !empty($current_display->getOption('style')['type'])
+            && $current_display->getOption('style')['type'] == 'maps_common'
           ) {
             $common_map_attachment = TRUE;
           }
@@ -63,7 +61,8 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
         && isset($command['selector'])
         && substr($command['selector'], 0, 16) === '.js-view-dom-id-'
       ) {
-        $command['command'] = 'geolocationCommonMapUpdate';
+        $command['command'] = 'geolocationCommonMapsUpdate';
+        unset($command['method']);
       }
 
       // Stop the view from scrolling to the top of the page.

@@ -14,7 +14,7 @@ leaflet:
 
 # Leaflet integration library.
 geolocation.leaflet:
-  version: 8.x-2.x
+  version: 8.x-1.x
   dependencies:
     - core/drupalSettings
     - geolocation/geolocation.api
@@ -22,50 +22,10 @@ geolocation.leaflet:
   js:
     js/geolocation-leaflet-api.js: {}
 
-# Leaflet CommonMap.
-commonmap.leaflet:
-  js:
-    js/geolocation-common-map-leaflet.js: {}
-  dependencies:
-    - geolocation/geolocation.commonmap
-
 # Leaflet widget API.
 widget.api.leaflet:
   version: 1.x
   js:
-    js/geolocation-widget-leaflet-api.js: {}
+    js/geolocation-widget-leaflet-api.js: { scope: footer }
   dependencies:
     - geolocation/geolocation.widget.api
-
-#
-# Map Features
-#
-
-# MarkerPopup support.
-mapfeature.markerpopup:
-  js:
-    js/MapFeature/geolocation-marker-popup.js: {}
-  dependencies:
-    - geolocation_leaflet/geolocation.leaflet
-
-# MarkerClusterer support.
-leaflet.markerclusterer:
-  header: true
-  remote: https://github.com/Leaflet/Leaflet.markercluster
-  version: '1.2.0'
-  license:
-    name: MIT-LICENSE
-    gpl-compatible: true
-  css:
-    component:
-      'https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.css': { type: external, minified: true }
-      'https://unpkg.com/leaflet.markercluster@1.2.0/dist/MarkerCluster.Default.css': { type: external, minified: true }
-  js:
-    'https://unpkg.com/leaflet.markercluster@1.2.0/dist/leaflet.markercluster.js': { type: external, minified: true }
-
-mapfeature.markerclusterer:
-  js:
-    js/MapFeature/geolocation-marker-clusterer.js: {}
-  dependencies:
-    - geolocation_leaflet/geolocation.leaflet
-    - geolocation_leaflet/leaflet.markerclusterer

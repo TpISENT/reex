@@ -11,8 +11,7 @@
 /**
  * @typedef {Object} SpiderfyingSettings
  *
- * @extends {GeolocationMapFeatureSettings}
- *
+ * @property {String} enable
  * @property {String} spiderfiable_marker_path
  */
 
@@ -21,7 +20,7 @@
   'use strict';
 
   /**
-   * Spiderfying.
+   * SpiderfyingSettings.
    *
    * @type {Drupal~behavior}
    *
@@ -30,26 +29,29 @@
    */
   Drupal.behaviors.geolocationSpiderfying = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'spiderfying',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {SpiderfyingSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {SpiderfyingSettings} mapSettings.spiderfying - settings for current map
          */
-        function (map, featureSettings) {
-          if (typeof OverlappingMarkerSpiderfier === 'undefined') {
-            return;
-          }
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.spiderfying !== 'undefined'
+            && mapSettings.spiderfying.enable
+            && typeof OverlappingMarkerSpiderfier !== 'undefined'
+          ) {
 
-          /* global OverlappingMarkerSpiderfier */
+            /* global OverlappingMarkerSpiderfier */
 
-          map.addPopulatedCallback(function(map) {
+            var map = Drupal.geolocation.getMapById(mapId);
 
             var oms = null;
 
             /**
-             * @type {OverlappingMarkerSpiderfierInterface} OverlappingMarkerSpiderfier
+             * @param {OverlappingMarkerSpiderfierInterface} OverlappingMarkerSpiderfier
              */
             oms = new OverlappingMarkerSpiderfier(map.googleMap, {
               markersWontMove: true,
@@ -57,8 +59,7 @@
             });
 
             if (oms) {
-
-              var geolocationOmsMarkerFunction  = function (marker) {
+              map.addMarkerAddedCallback(function (marker) {
                 google.maps.event.addListener(marker, 'spider_format', function (status) {
 
                   /**
@@ -74,7 +75,7 @@
                       typeof originalIcon !== 'undefined'
                       && originalIcon !== null
                       && typeof originalIcon.url !== 'undefined'
-                      && originalIcon.url === featureSettings.spiderfiable_marker_path
+                      && originalIcon.url === mapSettings.spiderfying.spiderfiable_marker_path
                     ) {
                       // Do nothing.
                     }
@@ -88,7 +89,7 @@
                   switch (status) {
                     case OverlappingMarkerSpiderfier.markerStatus.SPIDERFIABLE:
                       icon = {
-                        url: featureSettings.spiderfiable_marker_path,
+                        url: mapSettings.spiderfying.spiderfiable_marker_path,
                         size: iconSize,
                         scaledSize: iconSize
                       };
@@ -119,26 +120,12 @@
                   }
                 );
                 oms.addMarker(marker);
-              };
-
-              $.each(map.mapMarkers, function(index, marker) {
-                geolocationOmsMarkerFunction(marker);
               });
-
-              map.addMarkerAddedCallback(
-                function (marker) {
-                  geolocationOmsMarkerFunction(marker)
-                }
-              );
             }
-          });
-
-          return true;
-        },
-        drupalSettings
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
 })(jQuery, Drupal);

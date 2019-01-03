@@ -5,8 +5,6 @@ namespace Drupal\geolocation;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Utility\NestedArray;
 
 /**
  * Search plugin manager.
@@ -14,7 +12,7 @@ use Drupal\Component\Utility\NestedArray;
 class MapProviderManager extends DefaultPluginManager {
 
   /**
-   * Constructs an MapProviderManager object.
+   * Constructs an GeocoderManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
@@ -34,12 +32,12 @@ class MapProviderManager extends DefaultPluginManager {
    * Return MapProvider by ID.
    *
    * @param string $id
-   *   MapProvider ID.
+   *   Geocoder ID.
    * @param array $configuration
    *   Configuration.
    *
    * @return \Drupal\geolocation\MapProviderInterface|false
-   *   MapProvider instance.
+   *   Geocoder instance.
    */
   public function getMapProvider($id, array $configuration = []) {
     $definitions = $this->getDefinitions();
@@ -57,63 +55,6 @@ class MapProviderManager extends DefaultPluginManager {
       return FALSE;
     }
     return FALSE;
-  }
-
-  /**
-   * Return MapProvider default ssettings by ID.
-   *
-   * @param string $id
-   *   MapProvider ID.
-   *
-   * @return array|false
-   *   MapProvider default settings.
-   */
-  public function getMapProviderDefaultSettings($id) {
-    $definitions = $this->getDefinitions();
-    if (empty($definitions[$id])) {
-      return FALSE;
-    }
-
-    /** @var \Drupal\geolocation\MapProviderInterface $classname */
-    $classname = $definitions[$id]['class'];
-
-    return $classname::getDefaultSettings();
-  }
-
-  /**
-   * Get Map provider settings.
-   *
-   * @return array
-   *   Options.
-   */
-  public function getMapProviderOptions() {
-    $options = [];
-    foreach ($this->getDefinitions() as $id => $definition) {
-      $options[$id] = $definition['name'];
-    }
-
-    return $options;
-  }
-
-  /**
-   * Return settings array for map provider after select change.
-   *
-   * @param array $form
-   *   Form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   Current From State.
-   *
-   * @return array|false
-   *   Settings form.
-   */
-  public static function addSettingsFormAjax(array $form, FormStateInterface $form_state) {
-    $triggering_element_parents = $form_state->getTriggeringElement()['#array_parents'];
-
-    $settings_element_parents = $triggering_element_parents;
-    array_pop($settings_element_parents);
-    $settings_element_parents[] = 'map_provider_settings';
-
-    return NestedArray::getValue($form, $settings_element_parents);
   }
 
 }

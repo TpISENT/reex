@@ -62,8 +62,8 @@ display:
             fixed_value:
               weight: -8
               settings:
-                latitude: 0
-                longitude: 0
+                latitude: '0'
+                longitude: '0'
               enable: false
             fit_bounds:
               enable: true
@@ -71,22 +71,23 @@ display:
             client_location:
               enable: true
               weight: 0
+              settings:
+                update_map: '0'
           even_empty: 1
           marker_icon_path: ''
           marker_row_number: 0
-          map_provider_id: google_maps
-          map_provider_settings:
+          google_map_settings:
             height: 400px
             width: 100%
             type: ROADMAP
-            zoom: 3
-            maxZoom: 18
-            minZoom: 0
+            zoom: '3'
+            maxZoom: '18'
+            minZoom: '0'
             rotateControl: false
             scrollwheel: true
             gestureHandling: auto
             preferScrollingToZooming: false
-            disableDoubleClickZoom: false
+            disableDoubleClickZoom: '0'
             map_features:
               control_locate:
                 weight: 0
@@ -97,9 +98,9 @@ display:
                 enabled: true
                 weight: 0
                 settings:
-                  info_window_solitary: true
-                  disable_auto_pan: true
-                  info_auto_display: false
+                  info_window_solitary: 1
+                  disable_auto_pan: 1
+                  info_auto_display: 0
               marker_infobubble:
                 weight: 0
                 settings:
@@ -142,7 +143,7 @@ display:
                 settings:
                   image_path: ''
                   styles: ''
-                  max_zoom: 15
+                  max_zoom: '15'
                 enabled: false
               map_type_style:
                 weight: 0

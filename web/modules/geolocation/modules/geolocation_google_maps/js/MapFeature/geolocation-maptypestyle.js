@@ -1,8 +1,7 @@
 /**
  * @typedef {Object} MapTypeStyleSettings
  *
- * @extends {GeolocationMapFeatureSettings}
- *
+ * @property {String} enable
  * @property {String} style
  */
 
@@ -20,30 +19,45 @@
    */
   Drupal.behaviors.geolocationGoogleMapTypeStyle = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'map_type_style',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {MapTypeStyleSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {MapTypeStyleSettings} mapSettings.map_type_style - settings for current map
          */
-        function (map, featureSettings) {
-          map.addInitializedCallback(function (map) {
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.map_type_style !== 'undefined'
+            && mapSettings.map_type_style.enable
+          ) {
 
-            var styles = [];
-            if (typeof map.googleMap.styles !== 'undefined') {
-              styles = map.googleMap.styles;
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (!map) {
+              return;
             }
-            styles = $.merge(featureSettings.style, styles);
 
-            map.googleMap.setOptions({styles: styles});
-          });
+            if (map.wrapper.hasClass('geolocation-map-style-type-processed')) {
+              return;
+            }
 
-          return true;
-        },
-        drupalSettings
+            map.wrapper.addClass('geolocation-map-style-type-processed');
+
+            map.addReadyCallback(function (map) {
+
+              var styles = [];
+              if (typeof map.googleMap.styles !== 'undefined') {
+                styles = map.googleMap.styles;
+              }
+              styles = $.merge(mapSettings.map_type_style.style, styles);
+
+              map.googleMap.setOptions({styles: styles});
+            });
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 })(jQuery, Drupal);

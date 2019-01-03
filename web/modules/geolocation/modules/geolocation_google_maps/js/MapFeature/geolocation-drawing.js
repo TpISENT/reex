@@ -2,9 +2,6 @@
  * @typedef {Object} DrawingSettings
  *
  * @property {String} enable
- * @property {Object} settings - Settings
- * @property {Boolean|String} settings.polyline - Draw polyline
- * @property {Boolean|String} settings.polygon - Draw polygone
  */
 
 (function ($, Drupal) {
@@ -21,60 +18,65 @@
    */
   Drupal.behaviors.geolocationDrawing = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'drawing',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {DrawingSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {DrawingSettings} mapSettings.drawing - settings for current map
          */
-        function (map, featureSettings) {
-          map.addInitializedCallback(function (map) {
-            var locations = [];
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.drawing !== 'undefined'
+            && mapSettings.drawing.enable
+          ) {
 
-            $('#' + map.id, context).find('.geolocation-location').each(function (index, locationElement) {
-              var location = $(locationElement);
-              locations.push(new google.maps.LatLng(Number(location.data('lat')), Number(location.data('lng'))));
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            map.addReadyCallback(function (map) {
+              var locations = [];
+
+              $('#' + map.id, context).find('.geolocation-location').each(function (index, location) {
+                location = $(location);
+                locations.push(new google.maps.LatLng(Number(location.data('lat')), Number(location.data('lng'))));
+              });
+
+              if (!locations.length) {
+                return;
+              }
+
+              var drawingSettings = mapSettings.drawing.settings;
+
+
+              if (drawingSettings.polygon && drawingSettings.polygon !== '0') {
+                var polygon = new google.maps.Polygon({
+                  paths: locations,
+                  strokeColor: drawingSettings.strokeColor,
+                  strokeOpacity: drawingSettings.strokeOpacity,
+                  strokeWeight: drawingSettings.strokeWeight,
+                  geodesic: drawingSettings.geodesic,
+                  fillColor: drawingSettings.fillColor,
+                  fillOpacity: drawingSettings.fillOpacity
+                });
+                polygon.setMap(map.googleMap);
+              }
+
+              if (drawingSettings.polyline && drawingSettings.polyline !== '0') {
+                var polyline = new google.maps.Polyline({
+                  path: locations,
+                  strokeColor: drawingSettings.strokeColor,
+                  strokeOpacity: drawingSettings.strokeOpacity,
+                  strokeWeight: drawingSettings.strokeWeight,
+                  geodesic: drawingSettings.geodesic
+                });
+                polyline.setMap(map.googleMap);
+              }
             });
-
-            if (!locations.length) {
-              return;
-            }
-
-            var drawingSettings = featureSettings.settings;
-
-
-            if (drawingSettings.polygon && drawingSettings.polygon !== '0') {
-              var polygon = new google.maps.Polygon({
-                paths: locations,
-                strokeColor: drawingSettings.strokeColor,
-                strokeOpacity: drawingSettings.strokeOpacity,
-                strokeWeight: drawingSettings.strokeWeight,
-                geodesic: drawingSettings.geodesic,
-                fillColor: drawingSettings.fillColor,
-                fillOpacity: drawingSettings.fillOpacity
-              });
-              polygon.setMap(map.googleMap);
-            }
-
-            if (drawingSettings.polyline && drawingSettings.polyline !== '0') {
-              var polyline = new google.maps.Polyline({
-                path: locations,
-                strokeColor: drawingSettings.strokeColor,
-                strokeOpacity: drawingSettings.strokeOpacity,
-                strokeWeight: drawingSettings.strokeWeight,
-                geodesic: drawingSettings.geodesic
-              });
-              polyline.setMap(map.googleMap);
-            }
-          });
-
-          return true;
-        },
-        drupalSettings
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
 })(jQuery, Drupal);

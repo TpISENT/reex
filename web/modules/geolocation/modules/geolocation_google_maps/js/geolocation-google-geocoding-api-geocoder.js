@@ -8,6 +8,28 @@
  * @property {String[]} drupalSettings.geolocation.geocoder.googleGeocodingAPI.inputIds
  */
 
+/**
+ * Callback for geocoding.
+ *
+ * @callback googleGeocoderCallback
+ * @param {GoogleAddress[]} results - Returned results
+ * @param {String} status - Whether geocoding was successful
+ */
+
+/**
+ * @typedef {Object} GoogleGeocoder
+ * @property {function({}, googleGeocoderCallback)} Geocoder.geocode
+ */
+
+/**
+ * @extends {GoogleMap}
+ * @property {Object} GeocoderStatus
+ * @property {String} GeocoderStatus.OK
+ *
+ * @function
+ * @property {function():GoogleGeocoder} Geocoder
+ */
+
 (function ($, Drupal) {
   'use strict';
 
@@ -19,8 +41,10 @@
 
   Drupal.geolocation.geocoder.googleGeocodingAPI = {};
 
-  Drupal.geolocation.geocoder.googleGeocodingAPI.attach = function (geocoderInputElement) {
-    var geocoderInput = $(geocoderInputElement);
+  /**
+   * @param {jQuery} geocoderInput - Input element.
+   */
+  Drupal.geolocation.geocoder.googleGeocodingAPI.attach = function (geocoderInput) {
     geocoderInput.once().autocomplete({
       autoFocus: true,
       source: function (request, response) {
@@ -61,13 +85,13 @@
        * @param {Object} ui.item - See jquery doc
        */
       select: function (event, ui) {
-        Drupal.geolocation.geocoder.resultCallback(ui.item.address, $(event.target).data('source-identifier').toString());
+        Drupal.geolocation.geocoder.resultCallback(ui.item.address, $(event.target).data('source-identifier'));
         $('.geolocation-geocoder-google-geocoding-api-state[data-source-identifier="' + $(event.target).data('source-identifier') + '"]').val(1);
       }
     })
     .on('input', function () {
       $('.geolocation-geocoder-google-geocoding-api-state[data-source-identifier="' + $(this).data('source-identifier') + '"]').val(0);
-      Drupal.geolocation.geocoder.clearCallback($(this).data('source-identifier').toString());
+      Drupal.geolocation.geocoder.clearCallback($(this).data('source-identifier'));
     });
   };
 
@@ -92,8 +116,7 @@
 
       // Load Google Maps API and execute all callbacks.
       Drupal.geolocation.google.load();
-    },
-    detach: function() {}
+    }
   };
 
 })(jQuery, Drupal);

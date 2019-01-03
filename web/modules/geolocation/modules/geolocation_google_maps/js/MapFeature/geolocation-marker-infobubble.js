@@ -1,8 +1,7 @@
 /**
  * @typedef {Object} MarkerInfoBubbleSettings
  *
- * @extends {GeolocationMapFeatureSettings}
- *
+ * @property {bool} enable
  * @property {bool} closeButton
  * @property {bool} closeOther
  * @property {String} closeButtonSrc
@@ -23,9 +22,9 @@
  * @property {Function} open
  * @property {Function} close
  *
- * @property {Boolean} enable
- * @property {Boolean} closeButton
- * @property {Boolean} closeOther
+ * @property {bool} enable
+ * @property {bool} closeButton
+ * @property {bool} closeOther
  * @property {String} closeButtonSrc
  * @property {String} shadowStyle
  * @property {Number} padding
@@ -60,64 +59,73 @@
    */
   Drupal.behaviors.geolocationMarkerInfoBubble = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_infobubble',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {MarkerInfoBubbleSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {MarkerInfoBubbleSettings} mapSettings.marker_infobubble - settings for current map
          */
-        function (map, featureSettings) {
-          map.addMarkerAddedCallback(function (currentMarker) {
-            var content = currentMarker.locationWrapper.find('.location-content').html();
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.marker_infobubble !== 'undefined'
+            && mapSettings.marker_infobubble.enable
+          ) {
 
-            if (content.length < 1) {
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (!map) {
               return;
             }
 
-            google.maps.event.addListener(currentMarker, 'click', function () {
+            map.addMarkerAddedCallback(function (currentMarker) {
+              var content = currentMarker.locationWrapper.find('.location-content').html();
 
-              if (typeof currentMarker.infoBubble === 'undefined') {
-                currentMarker.infoBubble = new InfoBubble({
-                  map: map.googleMap,
-                  content: content,
-                  shadowStyle: featureSettings.shadowStyle,
-                  padding: featureSettings.padding,
-                  borderRadius: featureSettings.borderRadius,
-                  borderWidth: featureSettings.borderWidth,
-                  borderColor: featureSettings.borderColor,
-
-                  arrowSize: 10,
-                  arrowPosition: 30,
-                  arrowStyle: 2,
-
-                  hideCloseButton: !featureSettings.closeButton,
-                  closeButtonSrc: featureSettings.closeButtonSrc,
-                  backgroundClassName: 'infobubble',
-                  backgroundColor: featureSettings.backgroundColor,
-                  minWidth: featureSettings.minWidth,
-                  maxWidth: featureSettings.maxWidth,
-                  minHeight: featureSettings.minHeight,
-                  maxHeight: featureSettings.maxHeight
-                });
+              if (content.length < 1) {
+                return;
               }
 
-              if (featureSettings.closeOther) {
-                if (typeof map.infoBubble !== 'undefined') {
-                  map.infoBubble.close();
+              google.maps.event.addListener(currentMarker, 'click', function () {
+
+                if (typeof currentMarker.infoBubble === 'undefined') {
+                  currentMarker.infoBubble = new InfoBubble({
+                    map: map.googleMap,
+                    content: content,
+                    shadowStyle: mapSettings.marker_infobubble.shadowStyle,
+                    padding: mapSettings.marker_infobubble.padding,
+                    borderRadius: mapSettings.marker_infobubble.borderRadius,
+                    borderWidth: mapSettings.marker_infobubble.borderWidth,
+                    borderColor: mapSettings.marker_infobubble.borderColor,
+
+                    arrowSize: 10,
+                    arrowPosition: 30,
+                    arrowStyle: 2,
+
+                    hideCloseButton: !mapSettings.marker_infobubble.closeButton,
+                    closeButtonSrc: mapSettings.marker_infobubble.closeButtonSrc,
+                    backgroundClassName: 'infobubble',
+                    backgroundColor: mapSettings.marker_infobubble.backgroundColor,
+                    minWidth: mapSettings.marker_infobubble.minWidth,
+                    maxWidth: mapSettings.marker_infobubble.maxWidth,
+                    minHeight: mapSettings.marker_infobubble.minHeight,
+                    maxHeight: mapSettings.marker_infobubble.maxHeight
+                  });
                 }
-                map.infoBubble = currentMarker.infoBubble;
-              }
 
-              currentMarker.infoBubble.open(map.googleMap, currentMarker);
+                if (mapSettings.marker_infobubble.closeOther) {
+                  if (typeof map.infoBubble !== 'undefined') {
+                    map.infoBubble.close();
+                  }
+                  map.infoBubble = currentMarker.infoBubble;
+                }
+
+                currentMarker.infoBubble.open(map.googleMap, currentMarker);
+              });
             });
-          });
-
-          return true;
-        },
-        drupalSettings
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 })(jQuery, Drupal);

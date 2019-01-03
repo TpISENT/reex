@@ -127,7 +127,16 @@ class DemoRenderElementController extends ControllerBase {
         ],
       ],
     ];
-
+/*
+    $elements['input'] = [
+      '#type' => 'geolocation_input',
+      '#latitude' => 40.6700,
+      '#longitude' => -73.9400,
+      '#controls' => TRUE,
+      '#width' => 250,
+      '#height' => 250,
+    ];
+*/
     return $elements;
   }
 
