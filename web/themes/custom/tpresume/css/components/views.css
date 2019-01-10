@@ -164,7 +164,7 @@
 }
 .view-listings-grid .view-filters label {
   font-size: 11px;
-  color: rgba(63, 63, 63, 0.5);
+  color: rgba(0, 0, 0, 1);
   text-transform: uppercase;
   font-weight: 400;
   text-align: left;
