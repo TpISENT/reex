@@ -188,3 +188,13 @@
   text-align: right;
   padding-bottom: 15px;
 }
+
+.block-views-blockmt-listings-grid-block-2 .view-listings-grid-item {
+  padding: 10px;
+}
+.block-views-blockmt-listings-grid-block-2 {
+  color: #555555;
+}
+.block-views-blockmt-listings-grid-block-2 a {
+  color: #357cce;
+}
