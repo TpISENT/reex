@@ -44,7 +44,7 @@ a.button.button--outline:focus,
 .region--light-typography a.button.button--outline,
 .region--light-typography .button.button--outline > a {
   background-color: transparent;
-  border-color: #df8601;
+  border-color: #357cce;
   color: #ffffff;
 }
 .headings-wide-spacing-enabled a.button,
@@ -89,9 +89,9 @@ input[type="button"]:focus {
 .region--light-typography input[type="reset"],
 .region--light-typography input[type="button"],
 .region--light-typography input[type="button"] {
-  border-color: #df8601;
+  border-color: #357cce;
   color: #ffffff;
-  background-color: #df8601;
+  background-color: #357cce;
 }
 .region--light-typography a.button:hover,
 .region--light-typography a.button:focus,
