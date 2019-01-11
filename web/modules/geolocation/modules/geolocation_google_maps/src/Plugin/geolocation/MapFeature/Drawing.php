@@ -66,8 +66,11 @@ class Drawing extends MapFeatureBase {
       '#default_value' => $settings['strokeColor'],
       '#states' => [
         'visible' => [
-          ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
-          ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          [
+            ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
+            'or',
+            ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          ],
         ],
       ],
     ];
@@ -79,8 +82,11 @@ class Drawing extends MapFeatureBase {
       '#default_value' => $settings['strokeOpacity'],
       '#states' => [
         'visible' => [
-          ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
-          ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          [
+            ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
+            'or',
+            ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          ],
         ],
       ],
     ];
@@ -92,8 +98,11 @@ class Drawing extends MapFeatureBase {
       '#default_value' => $settings['strokeWeight'],
       '#states' => [
         'visible' => [
-          ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
-          ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          [
+            ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
+            'or',
+            ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          ],
         ],
       ],
     ];
@@ -104,8 +113,11 @@ class Drawing extends MapFeatureBase {
       '#default_value' => $settings['geodesic'],
       '#states' => [
         'visible' => [
-          ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
-          ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          [
+            ['input[name="' . $states_prefix . '[polyline]"]' => ['checked' => TRUE]],
+            'or',
+            ['input[name="' . $states_prefix . '[polygon]"]' => ['checked' => TRUE]],
+          ],
         ],
       ],
     ];

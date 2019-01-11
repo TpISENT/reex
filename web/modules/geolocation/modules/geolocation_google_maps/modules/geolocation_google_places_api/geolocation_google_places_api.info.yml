@@ -4,10 +4,10 @@ description: Make sure to follow the <a href="https://developers.google.com/plac
 # core: 8.x
 package: Geolocation
 dependencies:
-  - geolocation_google_maps
+  - geolocation
 
-# Information added by Drupal.org packaging script on 2018-07-17
-version: '8.x-2.0-beta1+74-dev'
+# Information added by Drupal.org packaging script on 2018-01-13
+version: '8.x-2.0-beta1'
 core: '8.x'
 project: 'geolocation'
-datestamp: 1531868026
+datestamp: 1515803593

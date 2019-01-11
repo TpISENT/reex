@@ -145,7 +145,7 @@ class GeolocationCore implements ContainerInjectionInterface {
     $field_lng = "{$table_name}.{$field_id}_lng";
 
     /*
-     * Map shows a map, not a globe. Therefore it will never flip over
+     * Google Maps shows a map, not a globe. Therefore it will never flip over
      * the poles, but it will move across -180°/+180° longitude.
      * So latitude will always have north larger than south, but east not
      * necessarily larger than west.
@@ -162,6 +162,68 @@ class GeolocationCore implements ContainerInjectionInterface {
         )
       )
     ";
+  }
+
+  /**
+   * Transform sexagesimal notation to float.
+   *
+   * Sexagesimal means a string like - X° Y' Z"
+   *
+   * @param string $sexagesimal
+   *   String in DMS notation.
+   *
+   * @return float|false
+   *   The regular float notation or FALSE if not sexagesimal.
+   */
+  public static function sexagesimalToDecimal($sexagesimal = '') {
+    $pattern = "/(?<degree>-?\d{1,3})°[ ]?((?<minutes>\d{1,2})')?[ ]?((?<seconds>(\d{1,2}|\d{1,2}\.\d+))\")?/";
+    preg_match($pattern, $sexagesimal, $gps_matches);
+    if (
+      !empty($gps_matches)
+    ) {
+      $value = $gps_matches['degree'];
+      if (!empty($gps_matches['minutes'])) {
+        $value += $gps_matches['minutes'] / 60;
+      }
+      if (!empty($gps_matches['seconds'])) {
+        $value += $gps_matches['seconds'] / 3600;
+      }
+    }
+    else {
+      return FALSE;
+    }
+    return $value;
+  }
+
+  /**
+   * Transform decimal notation to sexagesimal.
+   *
+   * Sexagesimal means a string like - X° Y' Z"
+   *
+   * @param float|string $decimal
+   *   Either float or float-castable location.
+   *
+   * @return string|false
+   *   The sexagesimal notation or FALSE on error.
+   */
+  public static function decimalToSexagesimal($decimal = '') {
+    $decimal = (float) $decimal;
+
+    $degrees = floor($decimal);
+    $rest = $decimal - $degrees;
+    $minutes = floor($rest * 60);
+    $rest = $rest * 60 - $minutes;
+    $seconds = round($rest * 60, 4);
+
+    $value = $degrees . '°';
+    if (!empty($minutes)) {
+      $value .= ' ' . $minutes . '\'';
+    }
+    if (!empty($seconds)) {
+      $value .= ' ' . $seconds . '"';
+    }
+
+    return $value;
   }
 
 }

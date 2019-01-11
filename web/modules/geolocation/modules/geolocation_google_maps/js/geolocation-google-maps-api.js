@@ -42,6 +42,196 @@
  * @property {String} info_text
  */
 
+/**
+ * @typedef {Object} google
+ * @property {GoogleMap} maps
+ * @property {Object} event
+ * @property {Function} addListener
+ * @property {Function} addDomListener
+ * @property {Function} addListenerOnce
+ * @property {Function} addDomListenerOnce
+ */
+
+/**
+ * @typedef {Object} GoogleMapBounds
+ * @property {function():GoogleMapLatLng} getNorthEast
+ * @property {function():GoogleMapLatLng} getSouthWest
+ * @property {function(GoogleMapBounds):Boolean} equals
+ */
+
+/**
+ * @typedef {Object} GoogleMapLatLng
+ * @property {function():float} lat
+ * @property {function():float} lng
+ */
+
+/**
+ * @typedef {Object} GoogleMapSize
+ * @property {function():float} height
+ * @property {function():float} width
+ */
+
+/**
+ * @typedef {Object} GoogleMapPoint
+ * @property {function():float} x
+ * @property {function():float} y
+ */
+
+/**
+ * @typedef {Object} GoogleMapSymbolPath
+ * @property {String} BACKWARD_CLOSED_ARROW
+ * @property {String} BACKWARD_OPEN_ARROW
+ * @property {String} CIRCLE
+ * @property {String} FORWARD_CLOSED_ARROW
+ * @property {String} FORWARD_OPEN_ARROW
+ */
+
+/**
+ * @typedef {Object} AddressComponent
+ * @property {String} long_name - Long component name
+ * @property {String} short_name - Short component name
+ * @property {String[]} types - Component type
+ * @property {GoogleGeometry} geometry
+ */
+
+/**
+ * @typedef {Object} GoogleAddress
+ * @property {AddressComponent[]} address_components - Components
+ * @property {String} formatted_address - Formatted address
+ * @property {GoogleGeometry} geometry - Geometry
+ */
+
+/**
+ * @typedef {Object} GoogleGeometry
+ * @property {GoogleMapLatLng} location - Location
+ * @property {String} location_type - Location type
+ * @property {GoogleMapBounds} viewport - Viewport
+ * @property {GoogleMapBounds} bounds - Bounds (optionally)
+ */
+
+/**
+ * @typedef {Object} GoogleMapProjection
+ * @property {function(GoogleMapLatLng):GoogleMapPoint} fromLatLngToPoint
+ */
+
+/**
+ * @typedef {Object} GoogleMarkerSettings
+ *
+ * Settings from https://developers.google.com/maps/documentation/javascript/3.exp/reference#MarkerOptions:
+ * @property {GoogleMap} map
+ */
+
+/**
+ * @typedef {Object} GoogleMarker
+ * @extends {GeolocationMapMarker}
+ * @property {Function} setPosition
+ * @property {Function} setMap
+ * @property {Function} setIcon
+ * @property {Function} getIcon
+ * @property {Function} setTitle
+ * @property {Function} setLabel
+ * @property {Function} addListener
+ * @property {function():GoogleMapLatLng} getPosition
+ */
+
+/**
+ * @typedef {Object} GoogleCircle
+ * @property {function():GoogleMapBounds} Circle.getBounds()
+ * @property {function(GoogleMapLatLng)} Circle.setCenter()
+ * @property {function(number)} Circle.setRadius()
+ */
+
+/**
+ * @typedef {Object} GoogleMap
+ *
+ * @property {Object} MapTypeControlStyle
+ * @property {String} MapTypeControlStyle.HORIZONTAL_BAR
+ * @property {String} MapTypeControlStyle.DROPDOWN_MENU
+ * @property {String} MapTypeControlStyle.DEFAULT
+ *
+ * @property {Object} ZoomControlStyle
+ * @property {String} ZoomControlStyle.LARGE
+ * @property {String} ZoomControlStyle.SMALL
+ *
+ * @property {Object} ControlPosition
+ * @property {String} ControlPosition.TOP_LEFT
+ * @property {String} ControlPosition.TOP_CENTER
+ * @property {String} ControlPosition.TOP_RIGHT
+ * @property {String} ControlPosition.LEFT_TOP
+ * @property {String} ControlPosition.LEFT_CENTER
+ * @property {String} ControlPosition.LEFT_BOTTOM
+ * @property {String} ControlPosition.BOTTOM_LEFT
+ * @property {String} ControlPosition.BOTTOM_CENTER
+ * @property {String} ControlPosition.BOTTOM_RIGHT
+ * @property {String} ControlPosition.RIGHT_TOP
+ * @property {String} ControlPosition.RIGHT_CENTER
+ * @property {String} ControlPosition.RIGHT_RIGHT
+ *
+ * @property {Object} MapTypeId
+ * @property {String} MapTypeId.ROADMAP
+ *
+ * @property {Function} LatLngBounds
+ *
+ * @function
+ * @property Map
+ *
+ * @function
+ * @property {function({GoogleMarkerSettings}):GoogleMarker} Marker
+ *
+ * @function
+ * @property {function(string|number|float, string|number|float):GoogleMapLatLng} LatLng
+ *
+ * @function
+ * @property {function(string|number|float, string|number|float):GoogleMapPoint} Point
+ *
+ * @function
+ * @property {function(string|number|float, string|number|float):GoogleMapSize} Size
+ *
+ * @property {GoogleMapSymbolPath} SymbolPath
+ *
+ * @property {function(Object):GoogleCircle} Circle
+ *
+ * @property {function():GoogleMapProjection} getProjection
+ *
+ * @property {Function} fitBounds
+ *
+ * @property {Function} setCenter
+ * @property {Function} setZoom
+ * @property {Function} getZoom
+ * @property {Function} setOptions
+ *
+ * @property {function():GoogleMapBounds} getBounds
+ * @property {function():GoogleMapLatLng} getCenter
+ */
+
+/**
+ * @typedef {Object} GooglePolyline
+ * @property {function(GoogleMap)} setMap
+ */
+
+/**
+ * @typedef {Object} GooglePolygon
+ * @property {function(GoogleMap)} setMap
+ */
+
+/**
+ * @typedef {Object} GoogleMap
+ * @property {function(Object):GooglePolyline} Polyline
+ * @property {function(Object):GooglePolygon} Polygon
+ */
+
+/**
+ * @typedef {Object} CommonMapDrawSettings
+ * @property {boolean} polyline
+ * @property {string} strokeColor
+ * @property {string} strokeOpacity
+ * @property {string} strokeWeight
+ * @property {boolean} geodesic
+ * @property {boolean} polygon
+ * @property {string} fillColor
+ * @property {string} fillOpacity
+ */
+
 (function ($, Drupal, drupalSettings) {
   'use strict';
 
@@ -56,7 +246,6 @@
    * @inheritDoc
    *
    * @prop {GoogleMapSettings} settings.google_map_settings - Google Map specific settings.
-   * @prop {google.maps.Map} googleMap - Google Map.
    */
   function GeolocationGoogleMap(mapSettings) {
     this.type = 'google_maps';
@@ -85,14 +274,18 @@
       width: this.settings.google_map_settings.width
     });
 
-    this.addInitializedCallback(function (map) {
+    this.settings.google_map_settings.zoom = parseInt(this.settings.google_map_settings.zoom);
+    this.settings.google_map_settings.maxZoom = parseInt(this.settings.google_map_settings.maxZoom);
+    this.settings.google_map_settings.minZoom = parseInt(this.settings.google_map_settings.minZoom);
+
+    this.addReadyCallback(function (map) {
       // Get the center point.
       var center = new google.maps.LatLng(map.lat, map.lng);
 
       /**
        * Create the map object and assign it to the map.
        */
-      var googleMap = new google.maps.Map(map.container[0], {
+      var googleMap = new google.maps.Map(map.container.get(0), {
         zoom: map.settings.google_map_settings.zoom,
         maxZoom: map.settings.google_map_settings.maxZoom,
         minZoom: map.settings.google_map_settings.minZoom,
@@ -110,15 +303,12 @@
         gestureHandling: map.settings.google_map_settings.gestureHandling
       });
 
+      /** @property {GoogleMap} googleMap */
       map.googleMap = googleMap;
 
-      google.maps.event.addListener(
-        map.googleMap,
-        'click',
-        function (e) {
-          map.clickCallback({lat: e.latLng.lat(), lng: e.latLng.lng()});
-        }
-      );
+      google.maps.event.addListener(map.googleMap, 'click', function (e) {
+        map.clickCallback({lat: e.latLng.lat(), lng: e.latLng.lng()});
+      });
 
       google.maps.event.addListener(map.googleMap, 'rightclick', function (e) {
         map.contextClickCallback({lat: e.latLng.lat(), lng: e.latLng.lng()});
@@ -132,22 +322,23 @@
       }
 
       google.maps.event.addListenerOnce(map.googleMap, 'tilesloaded', function () {
-        map.populatedCallback();
+        map.loadedCallback();
       });
     });
 
-    if (this.initialized) {
-      this.initializedCallback();
+    if (this.ready) {
+      this.readyCallback();
     }
     else {
       var that = this;
       Drupal.geolocation.google.addLoadedCallback(function () {
-        that.initializedCallback();
+        that.readyCallback();
       });
 
       // Load Google Maps API and execute all callbacks.
       Drupal.geolocation.google.load();
     }
+
   }
   GeolocationGoogleMap.prototype = Object.create(Drupal.geolocation.GeolocationMapBase.prototype);
   GeolocationGoogleMap.prototype.constructor = GeolocationGoogleMap;
@@ -162,7 +353,7 @@
       }
     }
 
-    markerSettings.position = new google.maps.LatLng(Number(markerSettings.position.lat), Number(markerSettings.position.lng));
+    markerSettings.position = new google.maps.LatLng(parseFloat(markerSettings.position.lat), parseFloat(markerSettings.position.lng));
 
     markerSettings.map = this.googleMap;
 
@@ -175,10 +366,12 @@
       }
     }
 
-    /** @type {google.maps.Marker} */
+    /** @type {GoogleMarker} */
     var currentMarker = new google.maps.Marker(markerSettings);
 
-    Drupal.geolocation.GeolocationMapBase.prototype.setMapMarker.call(this, currentMarker);
+    this.mapMarkers.push(currentMarker);
+
+    this.markerAddedCallback(currentMarker);
 
     return currentMarker;
   };
@@ -204,7 +397,7 @@
 
       /**
        * @param {integer} index - Current index.
-       * @param {google.maps.Marker} item - Current marker.
+       * @param {GoogleMarker} item - Current marker.
        */
       function (index, item) {
         bounds.extend(item.getPosition());
@@ -217,13 +410,36 @@
       this.googleMap.fitBounds(boundaries);
     }
   };
+
+  /**
+   * Draw a circle representing the accuracy radius of HTML5 geolocation.
+   *
+   * @param {GeolocationCoordinates|GoogleMapLatLng} location - Location to center on.
+   * @param {int} accuracy - Accuracy in m.
+   *
+   * @return {GoogleCircle} - Indicator circle.
+   */
+  GeolocationGoogleMap.prototype.addAccuracyIndicatorCircle = function (location, accuracy) {
+    return new google.maps.Circle({
+      center: location,
+      radius: accuracy,
+      map: this.googleMap,
+      fillColor: '#4285F4',
+      fillOpacity: 0.15,
+      strokeColor: '#4285F4',
+      strokeOpacity: 0.3,
+      strokeWeight: 1,
+      clickable: false
+    });
+  };
+
   GeolocationGoogleMap.prototype.setCenterByBehavior = function (centreBehavior) {
     centreBehavior = centreBehavior || this.centreBehavior;
 
     Drupal.geolocation.GeolocationMapBase.prototype.setCenterByBehavior.call(this, centreBehavior);
     switch (centreBehavior) {
       case 'preset':
-        this.addInitializedCallback(function (map) {
+        this.addReadyCallback(function (map) {
           if (map.settings.google_map_settings.zoom) {
             google.maps.event.addListenerOnce(map.googleMap, 'zoom_changed', function () {
               if (map.settings.google_map_settings.zoom < map.googleMap.getZoom()) {
@@ -235,8 +451,15 @@
         break;
     }
   };
-  GeolocationGoogleMap.prototype.setCenterByCoordinates = function (coordinates, accuracy, identifier) {
-    Drupal.geolocation.GeolocationMapBase.prototype.setCenterByCoordinates.call(this, coordinates, accuracy, identifier);
+
+  /**
+   * Re-center map, draw a circle indicating accuracy and slowly fade it out.
+   *
+   * @param {GoogleMapLatLng} coordinates - A location (latLng) object from Google Maps API.
+   * @param {int} accuracy - Accuracy in meter.
+   */
+  GeolocationGoogleMap.prototype.setCenterByCoordinates = function (coordinates, accuracy) {
+    Drupal.geolocation.GeolocationMapBase.prototype.setCenterByCoordinates.call(this, coordinates, accuracy);
 
     if (typeof accuracy === 'undefined') {
       this.googleMap.setCenter(coordinates);
@@ -269,6 +492,10 @@
       }
     }
   };
+
+  /**
+   * @inheritDoc
+   */
   GeolocationGoogleMap.prototype.addControl = function (element) {
     element = $(element);
 
@@ -281,19 +508,17 @@
       }
     }
 
-    var controlAlreadyAdded = false;
+    var controlAdded = false;
     var controlIndex = 0;
     this.googleMap.controls[position].forEach(function (controlElement, index) {
-      var control = $(controlElement);
-      if (element[0].getAttribute("class") === control[0].getAttribute("class")) {
-        controlAlreadyAdded = true;
+      if (element.get(0).getAttribute("class") === controlElement.getAttribute("class")) {
+        controlAdded = true;
         controlIndex = index;
       }
     });
 
-    if (!controlAlreadyAdded) {
-      element.show();
-      this.googleMap.controls[position].push(element[0]);
+    if (!controlAdded) {
+      this.googleMap.controls[position].push(element.get(0));
       return element;
     }
     else {
@@ -304,6 +529,10 @@
       return this.googleMap.controls[position].getAt(controlIndex);
     }
   };
+
+  /**
+   * @inheritDoc
+   */
   GeolocationGoogleMap.prototype.removeControls = function () {
     $.each(this.googleMap.controls, function (index, item) {
       if (typeof item === 'undefined') {
@@ -320,29 +549,9 @@
   Drupal.geolocation.addMapProvider('google_maps', 'GeolocationGoogleMap');
 
   /**
-   * Draw a circle representing the accuracy radius of HTML5 geolocation.
+   * Adds a callback that will be called once the maps library is loaded.
    *
-   * @param {GeolocationCoordinates|google.maps.LatLng} location - Location to center on.
-   * @param {int} accuracy - Accuracy in m.
-   *
-   * @return {google.maps.Circle} - Indicator circle.
-   */
-  GeolocationGoogleMap.prototype.addAccuracyIndicatorCircle = function (location, accuracy) {
-    return new google.maps.Circle({
-      center: location,
-      radius: accuracy,
-      map: this.googleMap,
-      fillColor: '#4285F4',
-      fillOpacity: 0.15,
-      strokeColor: '#4285F4',
-      strokeOpacity: 0.3,
-      strokeWeight: 1,
-      clickable: false
-    });
-  };
-
-  /**
-   * @inheritDoc
+   * @param {googleLoadedCallback} callback - The callback
    */
   Drupal.geolocation.google.addLoadedCallback = function (callback) {
     Drupal.geolocation.google.loadedCallbacks = Drupal.geolocation.google.loadedCallbacks || [];

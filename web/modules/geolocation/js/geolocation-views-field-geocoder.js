@@ -17,8 +17,8 @@
   Drupal.behaviors.geolocationViewsFieldGeocoder = {
     attach: function (context) {
 
-      var proximity_lat = $("input[name='proximity_lat']").once('geolocation-views-field-geocoder-processed');
-      var proximity_lng = $("input[name='proximity_lng']").once('geolocation-views-field-geocoder-processed');
+      var proximity_lat = $("input[name='proximity_lat']");
+      var proximity_lng = $("input[name='proximity_lng']");
 
       if (
         proximity_lat.length === 0
@@ -26,6 +26,15 @@
       ) {
         return;
       }
+
+      if (
+        proximity_lat.hasClass('geolocation-views-field-geocoder-processed')
+        || proximity_lat.hasClass('geolocation-views-field-geocoder-processed')
+      ) {
+        return;
+      }
+      proximity_lat.addClass('geolocation-views-field-geocoder-processed');
+      proximity_lng.addClass('geolocation-views-field-geocoder-processed');
 
       /**
        * @param {GoogleAddress} address - Google address object.

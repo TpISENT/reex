@@ -18,7 +18,6 @@ abstract class ControlCustomElementBase extends ControlElementBase {
       '#attributes' => [
         'class' => [
           'geolocation-map-control',
-          $this->pluginId,
         ],
         'data-google-map-control-position' => $feature_settings['position'],
       ],

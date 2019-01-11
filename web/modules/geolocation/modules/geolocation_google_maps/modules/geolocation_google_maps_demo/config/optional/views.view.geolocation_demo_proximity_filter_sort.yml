@@ -9,7 +9,6 @@ dependencies:
     module:
       - geolocation_google_maps_demo
   module:
-    - geolocation
     - geolocation_google_maps
     - node
     - user

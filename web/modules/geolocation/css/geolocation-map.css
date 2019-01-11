@@ -15,7 +15,7 @@
 }
 
 .geolocation-map-control {
-  display: none;
+  display: block;
   margin: 1em 0 0 1em;
 }
 

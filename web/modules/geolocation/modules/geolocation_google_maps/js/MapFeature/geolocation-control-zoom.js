@@ -1,9 +1,7 @@
 /**
  * @typedef {Object} ControlZoomSettings
  *
- * @extends {GeolocationMapFeatureSettings}
- *
- * @property {String} behavior
+ * @property {String} enable
  * @property {String} position
  * @property {String} style
  */
@@ -22,38 +20,46 @@
    */
   Drupal.behaviors.geolocationZoomControl = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_zoom',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {ControlZoomSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {ControlZoomSettings} mapSettings.control_zoom - settings for current map
          */
-        function (map, featureSettings) {
-          map.addPopulatedCallback(function (map) {
-            var options = {
-              zoomControlOptions: {
-                position: google.maps.ControlPosition[featureSettings.position],
-                style: google.maps.ZoomControlStyle[featureSettings.style]
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.control_zoom !== 'undefined'
+            && mapSettings.control_zoom.enable
+          ) {
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (!map) {
+              return;
+            }
+
+            map.addLoadedCallback(function (map) {
+              var options = {
+                zoomControlOptions: {
+                  position: google.maps.ControlPosition[mapSettings.control_zoom.position],
+                  style: google.maps.ZoomControlStyle[mapSettings.control_zoom.style]
+                }
+              };
+
+              if (mapSettings.control_zoom.behavior === 'always') {
+                options.zoomControl = true;
               }
-            };
+              else {
+                options.zoomControl = undefined;
+              }
 
-            if (featureSettings.behavior === 'always') {
-              options.zoomControl = true;
-            }
-            else {
-              options.zoomControl = undefined;
-            }
-
-            map.googleMap.setOptions(options);
-          });
-
-          return true;
-        },
-        drupalSettings
+              map.googleMap.setOptions(options);
+            });
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
 })(jQuery, Drupal);

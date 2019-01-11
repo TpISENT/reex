@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\geolocation\FunctionalJavascript;
 
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -13,7 +14,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
  *
  * @group geolocation
  */
-class GeolocationCommonMapAjaxJavascriptTest extends GeolocationJavascriptTestBase {
+class GeolocationCommonMapAjaxJavascriptTest extends JavascriptTestBase {
+
+  use GeolocationGoogleTestTrait;
 
   /**
    * {@inheritdoc}
@@ -112,6 +115,7 @@ class GeolocationCommonMapAjaxJavascriptTest extends GeolocationJavascriptTestBa
    */
   public function testCommonMap() {
     $this->drupalGetFilterGoogleKey('geolocation-common-map-ajax-test');
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->elementExists('css', '.geolocation-map-container');
     $this->assertSession()->elementExists('css', '.geolocation-location');
@@ -125,6 +129,7 @@ class GeolocationCommonMapAjaxJavascriptTest extends GeolocationJavascriptTestBa
    */
   public function testCommonMapAjax() {
     $this->drupalGetFilterGoogleKey('geolocation-common-map-ajax-test');
+    $this->assertSession()->statusCodeEquals(200);
 
     $session = $this->getSession();
 

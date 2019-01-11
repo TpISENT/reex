@@ -5,8 +5,6 @@ namespace Drupal\geolocation;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
-use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 
 /**
  * Defines an interface for geolocation DataProvider plugins.
@@ -14,7 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 interface DataProviderInterface extends PluginInspectionInterface {
 
   /**
-   * Determine valid views option.
+   * Get views field ID.
    *
    * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
    *   Views field definition.
@@ -22,94 +20,19 @@ interface DataProviderInterface extends PluginInspectionInterface {
    * @return bool
    *   Yes or no.
    */
-  public function isViewsGeoOption(FieldPluginBase $views_field);
+  public function isCommonMapViewsStyleOption(FieldPluginBase $views_field);
 
   /**
-   * Determine valid field geo option.
+   * Get positions from field.
    *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
-   *   Field definition.
-   *
-   * @return bool
-   *   Yes or no.
-   */
-  public function isFieldGeoOption(FieldDefinitionInterface $fieldDefinition);
-
-  /**
-   * Get positions from views row.
-   *
+   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
+   *   Views field definition.
    * @param \Drupal\views\ResultRow $row
    *   Row.
-   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $views_field
-   *   Views field definition.
    *
    * @return array
    *   Retrieved locations.
    */
-  public function getPositionsFromViewsRow(ResultRow $row, FieldPluginBase $views_field = NULL);
-
-  /**
-   * Get positions from field item list.
-   *
-   * @param \Drupal\Core\Field\FieldItemInterface $fieldItem
-   *   Views field definition.
-   *
-   * @return array
-   *   Retrieved locations.
-   */
-  public function getPositionsFromItem(FieldItemInterface $fieldItem);
-
-  /**
-   * Replace field item tokens.
-   *
-   * @param string $text
-   *   Text.
-   * @param \Drupal\Core\Field\FieldItemInterface $fieldItem
-   *   Field item.
-   *
-   * @return array
-   *   Retrieved locations.
-   */
-  public function replaceFieldItemTokens($text, FieldItemInterface $fieldItem);
-
-  /**
-   * Return field item tokens.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinitionInterface
-   *   Field definition interface.
-   *
-   * @return array
-   *   Token help element.
-   */
-  public function getTokenHelp(FieldDefinitionInterface $fieldDefinitionInterface = NULL);
-
-  /**
-   * Provide data provider settings form array.
-   *
-   * @param array $settings
-   *   The current data provider settings.
-   * @param array $parents
-   *   Form parents.
-   *
-   * @return array
-   *   A form array to be integrated in whatever.
-   */
-  public function getSettingsForm(array $settings, array $parents = []);
-
-  /**
-   * Set views field.
-   *
-   * @param \Drupal\views\Plugin\views\field\FieldPluginBase $viewsField
-   *   Views field.
-   */
-  public function setViewsField(FieldPluginBase $viewsField);
-
-  /**
-   * Set field definition.
-   *
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $fieldDefinition
-   *   Field definition.
-   */
-  public function setFieldDefinition(FieldDefinitionInterface $fieldDefinition);
+  public function getPositionsFromViewsRow(FieldPluginBase $views_field, ResultRow $row);
 
 }

@@ -7,7 +7,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
-use Drupal\geolocation\TypedData\GeolocationComputed;
 
 /**
  * Plugin implementation of the 'geolocation' field type.
@@ -95,12 +94,6 @@ class GeolocationItem extends FieldItemBase {
     $properties['data'] = MapDataDefinition::create()
       ->setLabel(t('Meta data'));
 
-    $properties['value'] = DataDefinition::create('string')
-      ->setLabel(t('Computed lat,lng value'))
-      ->setComputed(TRUE)
-      ->setInternal(FALSE)
-      ->setClass(GeolocationComputed::class);
-
     return $properties;
   }
 
@@ -108,8 +101,8 @@ class GeolocationItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $values['lat'] = rand(-89, 90) - rand(0, 999999) / 1000000;
-    $values['lng'] = rand(-179, 180) - rand(0, 999999) / 1000000;
+    $values['lat'] = rand(-90, 90) - rand(0, 999999) / 1000000;
+    $values['lng'] = rand(-180, 180) - rand(0, 999999) / 1000000;
     return $values;
   }
 
@@ -125,89 +118,12 @@ class GeolocationItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getValue() {
-    // Update the values and return them.
-    foreach ($this->properties as $name => $property) {
-      $value = $property->getValue();
-      // Only write NULL values if the whole map is not NULL.
-      if (isset($this->values) || isset($value)) {
-        $this->values[$name] = $value;
-      }
-    }
-    return $this->values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function preSave() {
     $this->get('lat')->setValue(trim($this->get('lat')->getValue()));
     $this->get('lng')->setValue(trim($this->get('lng')->getValue()));
     $this->get('lat_sin')->setValue(sin(deg2rad($this->get('lat')->getValue())));
     $this->get('lat_cos')->setValue(cos(deg2rad($this->get('lat')->getValue())));
     $this->get('lng_rad')->setValue(deg2rad($this->get('lng')->getValue()));
-  }
-
-  /**
-   * Transform sexagesimal notation to float.
-   *
-   * Sexagesimal means a string like - X° Y' Z"
-   *
-   * @param string $sexagesimal
-   *   String in DMS notation.
-   *
-   * @return float|false
-   *   The regular float notation or FALSE if not sexagesimal.
-   */
-  public static function sexagesimalToDecimal($sexagesimal = '') {
-    $pattern = "/(?<degree>-?\d{1,3})°[ ]?((?<minutes>\d{1,2})')?[ ]?((?<seconds>(\d{1,2}|\d{1,2}\.\d+))\")?/";
-    preg_match($pattern, $sexagesimal, $gps_matches);
-    if (
-    !empty($gps_matches)
-    ) {
-      $value = $gps_matches['degree'];
-      if (!empty($gps_matches['minutes'])) {
-        $value += $gps_matches['minutes'] / 60;
-      }
-      if (!empty($gps_matches['seconds'])) {
-        $value += $gps_matches['seconds'] / 3600;
-      }
-    }
-    else {
-      return FALSE;
-    }
-    return $value;
-  }
-
-  /**
-   * Transform decimal notation to sexagesimal.
-   *
-   * Sexagesimal means a string like - X° Y' Z"
-   *
-   * @param float|string $decimal
-   *   Either float or float-castable location.
-   *
-   * @return string|false
-   *   The sexagesimal notation or FALSE on error.
-   */
-  public static function decimalToSexagesimal($decimal = '') {
-    $decimal = (float) $decimal;
-
-    $degrees = floor($decimal);
-    $rest = $decimal - $degrees;
-    $minutes = floor($rest * 60);
-    $rest = $rest * 60 - $minutes;
-    $seconds = round($rest * 60, 4);
-
-    $value = $degrees . '°';
-    if (!empty($minutes)) {
-      $value .= ' ' . $minutes . '\'';
-    }
-    if (!empty($seconds)) {
-      $value .= ' ' . $seconds . '"';
-    }
-
-    return $value;
   }
 
 }

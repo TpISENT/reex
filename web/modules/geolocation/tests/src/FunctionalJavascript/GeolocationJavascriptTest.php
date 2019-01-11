@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\geolocation\FunctionalJavascript;
 
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -13,7 +14,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
  *
  * @group geolocation
  */
-class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
+class GeolocationJavascriptTest extends JavascriptTestBase {
+
+  use GeolocationGoogleTestTrait;
 
   /**
    * {@inheritdoc}
@@ -120,7 +123,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
         'lat' => 54,
         'lng' => 49,
         'data' => [
-          'map_provider_settings' => [
+          'google_map_settings' => [
             'height' => '376px',
             'width' => '229px',
           ],
@@ -149,7 +152,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
     $this->drupalGet('admin/config/services/geolocation/google_maps');
 
     // Enable the checkbox to use current language.
-    $edit = ['use_current_language' => TRUE];
+    $edit = ['use_current_language' => 1];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
 
     // Add and set French as the language. See from LanguageSwitchingTest.
@@ -165,11 +168,10 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
     $edit = ['language_interface[enabled][language-url]' => '1'];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
-    $this->drupalGet('fr/node/4');
+    $this->drupalGetFilterGoogleKey('fr/node/4');
     $this->assertSession()->elementExists('css', 'html[lang="fr"]');
 
-    $anchor = $this->assertSession()->waitForElement('css', 'a[href^="https://maps.google.com"][href*="hl="]');
-    $this->assertNotEmpty($anchor, "Wait for GoogleMaps to be loaded.");
+    $anchor = $this->assertSession()->waitForElement('css', 'a[href^="https://maps.google.com"][href*="hl="]', 3000);
     // To control the test messages, search inside the anchor's href.
     // This is achieved by looking for the "hl" parameter in an anchor's href:
     // https://maps.google.com/maps?ll=54,49&z=10&t=m&hl=fr&gl=US&mapclient=apiv3
@@ -184,7 +186,8 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
    * Tests the CommonMap style.
    */
   public function testCommonMap() {
-    $this->drupalGet('geolocation-test');
+    $this->drupalGetFilterGoogleKey('geolocation-test');
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->assertSession()->elementExists('css', '.geolocation-map-container');
     $this->assertSession()->elementExists('css', '.geolocation-location');
@@ -197,7 +200,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
    * Tests the Google Maps formatter.
    */
   public function testGoogleMapFormatter() {
-    $this->drupalGet('node/3');
+    $this->drupalGetFilterGoogleKey('node/3');
 
     $this->assertSession()->elementExists('css', '.geolocation-map-container');
 
@@ -209,7 +212,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
    * Tests the Google Maps formatter.
    */
   public function testGoogleMapFormatterCustomSettings() {
-    $this->drupalGet('node/4');
+    $this->drupalGetFilterGoogleKey('node/4');
 
     $this->assertSession()->elementExists('css', '.geolocation-map-container');
     $this->assertSession()->elementAttributeContains('css', '.geolocation-map-container', 'style', 'height: 376px');
@@ -224,13 +227,9 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
     ]);
     $this->drupalLogin($admin_user);
     // Display creation form.
-    $this->drupalGet('node/4/edit');
+    $this->drupalGetFilterGoogleKey('node/4/edit');
 
     $this->assertSession()->fieldExists("field_geolocation[0][google_map_settings][height]");
-
-    $this->getSession()->wait(6000);
-    $this->assertSession()->elementExists('css', '#edit-field-geolocation-0-google-map-settings > summary');
-    $this->getSession()->getPage()->find('css', '#edit-field-geolocation-0-google-map-settings > summary')->click();
 
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
@@ -239,7 +238,7 @@ class GeolocationJavascriptTest extends GeolocationJavascriptTestBase {
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
-    $this->drupalGet('node/4');
+    $this->drupalGetFilterGoogleKey('node/4');
 
     $this->assertSession()->elementExists('css', '.geolocation-map-container');
     $this->assertSession()->elementAttributeContains('css', '.geolocation-map-container', 'style', 'height: 273px;');

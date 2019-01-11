@@ -13,7 +13,6 @@ dependencies:
     module:
       - geolocation_google_maps_demo
   module:
-    - geolocation
     - geolocation_google_maps
     - node
     - taxonomy
@@ -493,28 +492,29 @@ display:
             fixed_value:
               weight: -7
               settings:
-                latitude: 0
-                longitude: 0
+                latitude: ''
+                longitude: ''
               enable: false
             client_location:
               weight: -6
               enable: false
+              settings:
+                update_map: '0'
           even_empty: 0
           marker_icon_path: ''
           marker_row_number: 0
-          map_provider_id: google_maps
-          map_provider_settings:
+          google_map_settings:
             height: 400px
             width: 100%
             type: ROADMAP
-            zoom: 10
-            maxZoom: 18
-            minZoom: 0
+            zoom: '10'
+            maxZoom: '18'
+            minZoom: '0'
             rotateControl: false
             scrollwheel: true
             gestureHandling: auto
             preferScrollingToZooming: false
-            disableDoubleClickZoom: false
+            disableDoubleClickZoom: '0'
             map_features:
               control_locate:
                 weight: 0
@@ -525,9 +525,9 @@ display:
                 enabled: true
                 weight: 0
                 settings:
-                  info_window_solitary: true
-                  disable_auto_pan: true
-                  info_auto_display: false
+                  info_window_solitary: 1
+                  disable_auto_pan: 1
+                  info_auto_display: 0
               marker_infobubble:
                 weight: 0
                 settings:
@@ -570,12 +570,12 @@ display:
                 settings:
                   image_path: ''
                   styles: ''
-                  max_zoom: 15
+                  max_zoom: '15'
                 enabled: false
               map_type_style:
                 weight: 0
                 settings:
-                  style: '[]'
+                  style: '""'
                 enabled: false
               control_zoom:
                 enabled: true
@@ -625,9 +625,9 @@ display:
                   strokeWeight: '2'
                   fillColor: '#FF0000'
                   fillOpacity: '0.35'
-                  polyline: false
-                  geodesic: false
-                  polygon: false
+                  polyline: '0'
+                  geodesic: '0'
+                  polygon: '0'
                 enabled: false
               map_disable_poi:
                 weight: 0

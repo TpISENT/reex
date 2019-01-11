@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\geolocation\FunctionalJavascript;
 
+use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -12,7 +13,9 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
  *
  * @group geolocation
  */
-class GeolocationGoogleGeocoderWidgetTest extends GeolocationJavascriptTestBase {
+class GeolocationGoogleGeocoderWidgetTest extends JavascriptTestBase {
+
+  use GeolocationGoogleTestTrait;
 
   public $adminUser;
 

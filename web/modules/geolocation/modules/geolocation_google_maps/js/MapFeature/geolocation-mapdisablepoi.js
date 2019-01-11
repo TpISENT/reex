@@ -12,31 +12,50 @@
    */
   Drupal.behaviors.geolocationContextPopup = {
     attach: function (context, drupalSettings) {
+      $.each(
+        drupalSettings.geolocation.maps,
 
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'map_disable_poi',
-        function (map, featureSettings) {
-          map.addInitializedCallback(function (map) {
+        /**
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {ContextPopupSettings} mapSettings.map_disable_poi.enable - Enabled
+         */
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.map_disable_poi !== 'undefined'
+            && mapSettings.map_disable_poi.enable
+          ) {
 
-            var styles = [];
-            if (typeof map.googleMap.styles !== 'undefined') {
-              styles = map.googleMap.styles;
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (!map) {
+              return;
             }
-            styles = $.merge(styles, [{
-              featureType: "poi",
-              stylers: [
-                { visibility: "off" }
-              ]
-            }]);
 
-            map.googleMap.setOptions({styles: styles});
-          });
+            if (map.wrapper.hasClass('geolocation-map-disable-poi-processed')) {
+              return;
+            }
 
-          return true;
-        },
-        drupalSettings
+            map.wrapper.addClass('geolocation-map-disable-poi-processed');
+
+            map.addReadyCallback(function (map) {
+
+              var styles = [];
+              if (typeof map.googleMap.styles !== 'undefined') {
+                styles = map.googleMap.styles;
+              }
+              styles = $.merge(styles, [{
+                featureType: "poi",
+                stylers: [
+                  { visibility: "off" }
+                ]
+              }]);
+
+              map.googleMap.setOptions({styles: styles});
+            });
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 })(jQuery, Drupal);

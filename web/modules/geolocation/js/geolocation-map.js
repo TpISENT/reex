@@ -16,21 +16,18 @@
    *   Attaches Geolocation Maps formatter functionality to relevant elements.
    */
   Drupal.behaviors.geolocationMap = {
-
-    /**
-     * @param context
-     * @param drupalSettings
-     * @param {Object} drupalSettings.geolocation
-     */
     attach: function (context, drupalSettings) {
-      $('.geolocation-map-wrapper', context).once('geolocation-map-processed').each(function (index, item) {
+      $('.geolocation-map-wrapper', context).each(function (index, item) {
         var mapWrapper = $(item);
         var mapSettings = {};
         mapSettings.centreBehavior = 'fitlocations';
         mapSettings.id = mapWrapper.attr('id');
         mapSettings.wrapper = mapWrapper;
 
-        if (mapWrapper.length === 0) {
+        if (
+          mapWrapper.length === 0
+          || mapWrapper.hasClass('geolocation-map-processed')
+        ) {
           return;
         }
 
@@ -54,7 +51,7 @@
         }
 
         if (typeof drupalSettings.geolocation === 'undefined') {
-          console.error("Bailing out for lack of settings.");  // eslint-disable-line no-console
+          console.err("Bailing out for lack of settings.");  // eslint-disable-line no-console
           return;
         }
 
@@ -71,10 +68,14 @@
           return;
         }
 
-        map.addInitializedCallback(function (map) {
+        // Set the already processed flag.
+        map.wrapper.addClass('geolocation-map-processed');
+
+        map.addLoadedCallback(function (map) {
           $('.geolocation-map-controls > *', map.wrapper).each(function (index, control) {
             map.addControl(control);
           });
+
           map.removeMapMarkers();
 
           var locations = map.loadMarkersFromContainer();
@@ -86,9 +87,9 @@
           map.wrapper.find('.geolocation-location').hide();
           map.setCenterByBehavior();
         });
+
       });
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
 })(jQuery, Drupal);

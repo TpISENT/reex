@@ -5,16 +5,15 @@
 #
 
 geolocation.api:
-  version: 8.x-2.x
+  version: 8.x-1.x
   js:
     js/geolocation-api.js: {}
   dependencies:
     - core/drupal
     - core/jquery
-    - core/jquery.once
 
 geolocation.geocoder.api:
-  version: 8.x-2.x
+  version: 8.x-1.x
   js:
     js/geolocation-geocoder-api.js: {}
   dependencies:
@@ -24,12 +23,12 @@ geolocation.geocoder.api:
 geolocation.widget.api:
   version: 1.x
   js:
-    js/geolocation-widget-api.js: {}
+    js/geolocation-widget-api.js: { scope: footer }
   dependencies:
     - geolocation/geolocation.api
 
 geolocation.widget:
-  version: 8.x-2.x
+  version: 8.x-1.x
   js:
     js/geolocation-widget.js: {}
   dependencies:
@@ -43,7 +42,7 @@ geolocation.widget:
 #
 
 geolocation.map:
-  version: 8.x-2.x
+  version: 8.x-1.x
   css:
     theme:
       css/geolocation-map.css: {}
@@ -62,6 +61,7 @@ geolocation.commonmap:
   dependencies:
     - geolocation/geolocation.map
 
+
 #
 #
 # Views
@@ -70,7 +70,7 @@ geolocation.commonmap:
 
 #Geolocation views field geocoder function.
 geolocation.views.field.geocoder:
-  version: 8.x-2.x
+  version: 8.x-1.x
   js:
     js/geolocation-views-field-geocoder.js: {}
   dependencies:
@@ -78,7 +78,7 @@ geolocation.views.field.geocoder:
 
 # Geolocation views filter geocoder function.
 geolocation.views.filter.geocoder:
-  version: 8.x-2.x
+  version: 8.x-1.x
   js:
     js/geolocation-views-filter-geocoder.js: {}
   dependencies:
@@ -97,4 +97,4 @@ geolocation.widgets.html5:
     theme:
       css/geolocation-widget-html5.css: {}
   js:
-    js/geolocation-widget-html5.js: {}
+    js/geolocation-widget-html5.js: { scope: footer }

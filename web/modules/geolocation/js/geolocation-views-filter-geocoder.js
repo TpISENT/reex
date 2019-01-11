@@ -23,7 +23,7 @@
       $.each(drupalSettings.geolocation.geocoder.viewsFilterGeocoder, function (elementId, settings) {
 
         /**
-         * @param {google.map.GeocoderResult} address - Google address object.
+         * @param {GoogleAddress} address - Google address object.
          */
         Drupal.geolocation.geocoder.addResultCallback(function (address) {
           if (typeof address.geometry.location === 'undefined') {
@@ -68,7 +68,7 @@
               $(context).find("input[name='" + elementId + "-lng']").val(address.geometry.location.lng());
               break;
           }
-        }, elementId.toString());
+        }, elementId);
 
         Drupal.geolocation.geocoder.addClearCallback(function () {
           switch (settings.type) {
@@ -84,7 +84,7 @@
               $(context).find("input[name='" + elementId + "-lng']").val('');
               break;
           }
-        }, elementId.toString());
+        }, elementId);
 
         delete drupalSettings.geolocation.geocoder.viewsFilterGeocoder[elementId];
       });

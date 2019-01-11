@@ -23,12 +23,12 @@ class GeolocationGoogleWidget extends GeolocationMapWidgetBase {
   /**
    * {@inheritdoc}
    */
-  static protected $mapProviderId = 'google_maps';
+  protected $mapProviderId = 'google_maps';
 
   /**
    * {@inheritdoc}
    */
-  static protected $mapProviderSettingsFormId = 'google_map_settings';
+  protected $mapProviderSettingsFormId = 'google_map_settings';
 
   /**
    * {@inheritdoc}
@@ -36,12 +36,12 @@ class GeolocationGoogleWidget extends GeolocationMapWidgetBase {
   public static function defaultSettings() {
     $settings = parent::defaultSettings();
 
-    $settings[self::$mapProviderSettingsFormId]['map_features']['control_geocoder'] = [
+    $settings['google_map_settings']['map_features']['control_geocoder'] = [
       'enabled' => TRUE,
       'weight' => -100,
     ];
-    $settings[self::$mapProviderSettingsFormId]['map_features']['control_recenter']['enabled'] = TRUE;
-    $settings[self::$mapProviderSettingsFormId]['map_features']['control_locate']['enabled'] = TRUE;
+    $settings['google_map_settings']['map_features']['control_recenter']['enabled'] = TRUE;
+    $settings['google_map_settings']['map_features']['control_locate']['enabled'] = TRUE;
 
     return $settings;
   }
@@ -58,7 +58,7 @@ class GeolocationGoogleWidget extends GeolocationMapWidgetBase {
       $element['#attached'],
       [
         'library' => [
-          'geolocation_google_maps/widget.google',
+          'geolocation_google_maps/widget.api.google',
         ],
       ]
     );

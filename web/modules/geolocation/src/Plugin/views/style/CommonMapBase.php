@@ -7,22 +7,14 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\SortArray;
 
 /**
- * Allow to display several field items on a common map.
+ * Class CommonMapBase.
  *
- * @ingroup views_style_plugins
- *
- * @ViewsStyle(
- *   id = "maps_common",
- *   title = @Translation("Geolocation CommonMap"),
- *   help = @Translation("Display geolocations on a common map."),
- *   theme = "views_view_list",
- *   display_types = {"normal"},
- * )
+ * @package Drupal\geolocation\Plugin\views\style
  */
-class CommonMapBase extends StylePluginBase {
+abstract class CommonMapBase extends StylePluginBase {
 
   protected $usesFields = TRUE;
   protected $usesRowPlugin = TRUE;
@@ -35,22 +27,25 @@ class CommonMapBase extends StylePluginBase {
   protected $titleField = FALSE;
   protected $iconField = FALSE;
 
+  protected $mapProviderId = FALSE;
+  protected $mapProviderSettingsFormId = FALSE;
+
   /**
-   * Map provider manager.
+   * Map provider.
+   *
+   * @var \Drupal\geolocation\MapProviderInterface
+   */
+  protected $mapProvider = FALSE;
+
+  /**
+   * Map provider base.
    *
    * @var \Drupal\geolocation\MapProviderManager
    */
   protected $mapProviderManager = NULL;
 
   /**
-   * MapCenter options manager.
-   *
-   * @var \Drupal\geolocation\MapCenterManager
-   */
-  protected $mapCenterManager = NULL;
-
-  /**
-   * Data provider base.
+   * Geolocation provider base.
    *
    * @var \Drupal\geolocation\DataProviderManager
    */
@@ -59,12 +54,20 @@ class CommonMapBase extends StylePluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $map_provider_manager, $map_center_manager, $data_provider_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $map_provider_manager, $data_provider_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->mapProviderManager = $map_provider_manager;
-    $this->mapCenterManager = $map_center_manager;
     $this->dataProviderManager = $data_provider_manager;
+
+    $mapProvider = $this->mapProviderManager->createInstance($this->mapProviderId);
+    if ($mapProvider) {
+      $this->mapProvider = $mapProvider;
+    }
+
+    if (empty($this->mapProviderSettingsFormId)) {
+      $this->mapProviderSettingsFormId = $this->mapProviderId . '_settings';
+    }
   }
 
   /**
@@ -76,7 +79,6 @@ class CommonMapBase extends StylePluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('plugin.manager.geolocation.mapprovider'),
-      $container->get('plugin.manager.geolocation.mapcenter'),
       $container->get('plugin.manager.geolocation.dataprovider')
     );
   }
@@ -92,20 +94,32 @@ class CommonMapBase extends StylePluginBase {
    *   The determined options.
    */
   protected function getMapUpdateOptions() {
-    $options = [];
+    $options = [
+      'boundary_filters' => [],
+      'boundary_filters_exposed' => [],
+      'map_update_options' => [],
+    ];
 
-    foreach ($this->displayHandler->getOption('filters') as $filter_id => $filter) {
-      if (
-        !empty($filter['plugin_id'])
-        && $filter['plugin_id'] == 'geolocation_filter_boundary'
-      ) {
-        /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter_handler */
-        $filter_handler = $this->displayHandler->getHandler('filter', $filter_id);
-
-        if ($filter_handler->isExposed()) {
-          $options['boundary_filter_' . $filter_id] = $this->t('Boundary Filter') . ' - ' . $filter_handler->adminLabel();
-        }
+    $filters = $this->displayHandler->getOption('filters');
+    foreach ($filters as $filter_name => $filter) {
+      if (empty($filter['plugin_id'])) {
+        continue;
       }
+
+      /** @var \Drupal\views\Plugin\views\filter\FilterPluginBase $filter_handler */
+      $filter_handler = $this->displayHandler->getHandler('filter', $filter_name);
+
+      switch ($filter['plugin_id']) {
+        case 'geolocation_filter_boundary':
+          if ($filter_handler->isExposed()) {
+            $options['boundary_filters_exposed'][$filter_name] = $filter_handler;
+          }
+          break;
+      }
+    }
+
+    foreach ($options['boundary_filters_exposed'] as $filter_name => $filter_handler) {
+      $options['map_update_options']['boundary_filter_' . $filter_name] = $this->t('Boundary Filter') . ' - ' . $filter_handler->adminLabel();
     }
 
     return $options;
@@ -124,7 +138,9 @@ class CommonMapBase extends StylePluginBase {
   public function render() {
 
     if (empty($this->options['geolocation_field'])) {
-      \Drupal::messenger()->addMessage("The geolocation common map ' . $this->view->id() . ' views style was called without a geolocation field defined in the views style settings.", 'error');
+      // TODO: Hu?
+      \Drupal::logger('geolocation')->error("The geolocation common map ' . $this->view->id() . ' views style was called without a geolocation field defined in the views style settings.");
+      drupal_set_message("The geolocation common map ' . $this->view->id() . ' views style was called without a geolocation field defined in the views style settings.", 'error');
       return [];
     }
 
@@ -150,19 +166,22 @@ class CommonMapBase extends StylePluginBase {
       $this->idField = $this->options['id_field'];
     }
 
-    // TODO: Not unique enough, but uniqueid() changes on every AJAX request.
-    // For the geolocationCommonMapBehavior to work, this has to stay identical.
-    $this->mapId = $this->view->id() . '-' . $this->view->current_display;
-    $this->mapId = str_replace('_', '-', $this->mapId);
+    if (!empty($this->options['dynamic_map']['enabled'])) {
+      // TODO: Not unique enough, but uniqueid() screws with AJAX.
+      $this->mapId = $this->view->id() . '-' . $this->view->current_display;
+      $this->mapId = str_replace('_', '-', $this->mapId);
+    }
+    else {
+      $this->mapId = $this->view->dom_id;
+    }
 
     $map_settings = [];
-    if (!empty($this->options['map_provider_settings'])) {
-      $map_settings = $this->options['map_provider_settings'];
+    if (!empty($this->options[$this->mapProviderSettingsFormId])) {
+      $map_settings = $this->options[$this->mapProviderSettingsFormId];
     }
 
     $build = [
       '#type' => 'geolocation_map',
-      '#maptype' => $this->options['map_provider_id'],
       '#id' => $this->mapId,
       '#settings' => $map_settings,
       '#attached' => [
@@ -177,6 +196,7 @@ class CommonMapBase extends StylePluginBase {
      * Dynamic map handling.
      */
     if (!empty($this->options['dynamic_map']['enabled'])) {
+
       if (
         !empty($this->options['dynamic_map']['update_target'])
         && $this->view->displayHandlers->has($this->options['dynamic_map']['update_target'])
@@ -193,6 +213,7 @@ class CommonMapBase extends StylePluginBase {
         'views_refresh_delay' => $this->options['dynamic_map']['views_refresh_delay'],
         'update_view_id' => $this->view->id(),
         'update_view_display_id' => $update_view_display_id,
+        'enable_refresh_event' => TRUE,
       ];
 
       if (substr($this->options['dynamic_map']['update_handler'], 0, strlen('boundary_filter_')) === 'boundary_filter_') {
@@ -212,22 +233,127 @@ class CommonMapBase extends StylePluginBase {
      * Add locations to output.
      */
     foreach ($this->view->result as $row_number => $row) {
-      foreach ($this->getLocationsFromRow($row) as $location) {
-        $build['locations'][] = $location;
+      $build['locations'][] = $this->getLocationsFromRow($row);
+    }
+
+    $centre = NULL;
+    $fitbounds = FALSE;
+
+    // Maps will not load without any centre defined.
+    if (!is_array($this->options['centre'])) {
+      return $build;
+    }
+
+    /*
+     * Centre handling.
+     */
+    foreach ($this->options['centre'] as $id => $option) {
+      // Ignore if not enabled.
+      if (empty($option['enable'])) {
+        continue;
+      }
+
+      // Break if fitBounds is enabled, as it will supersede any other option.
+      if ($fitbounds) {
+        break;
+      }
+      // Break if center is already set.
+      elseif (isset($centre['lat']) && isset($centre['lng'])) {
+        break;
+      }
+      // Break if center bounds are already set.
+      elseif (
+        isset($centre['lat_north_east'])
+        && isset($centre['lng_north_east'])
+        && isset($centre['lat_south_west'])
+        && isset($centre['lng_south_west'])
+      ) {
+        break;
+      }
+
+      switch ($id) {
+        case 'fixed_value':
+          $centre = [
+            'lat' => (float) $option['settings']['latitude'],
+            'lng' => (float) $option['settings']['longitude'],
+            'behavior' => 'preset',
+          ];
+          break;
+
+        case 'first_row':
+          if (!empty($build['locations'][0]['#position'])) {
+            $centre = $build['locations'][0]['#position'];
+            $centre['behavior'] = 'preset';
+          }
+          break;
+
+        case 'fit_bounds':
+          // fitBounds will only work when at least one result is available.
+          if (!empty($build['locations'][0]['#position'])) {
+            $fitbounds = TRUE;
+          }
+          $centre['behavior'] = 'fitlocations';
+          break;
+
+        case 'client_location':
+          $build['#attached']['drupalSettings']['geolocation']['commonMap'][$this->mapId]['client_location'] = [
+            'enable' => TRUE,
+          ];
+
+          if ($option['settings']['update_map']) {
+            $build['#attached']['drupalSettings']['geolocation']['commonMap'][$this->mapId]['client_location']['update_map'] = TRUE;
+          }
+
+          $centre['behavior'] = 'client_location';
+          break;
+
+        /*
+         * Handle the dynamic options.
+         */
+        default:
+          if (preg_match('/proximity_filter_*/', $id)) {
+            $filter_id = substr($id, 17);
+            /** @var \Drupal\geolocation\Plugin\views\filter\ProximityFilter $handler */
+            $handler = $this->displayHandler->getHandler('filter', $filter_id);
+            if (isset($handler->value['lat']) && isset($handler->value['lng'])) {
+              $centre = [
+                'lat' => (float) $handler->getLatitudeValue(),
+                'lng' => (float) $handler->getLongitudeValue(),
+              ];
+            }
+            break;
+          }
+          elseif (preg_match('/boundary_filter_*/', $id)) {
+            $filter_id = substr($id, 16);
+            /** @var \Drupal\geolocation\Plugin\views\filter\ProximityFilter $handler */
+            $handler = $this->displayHandler->getHandler('filter', $filter_id);
+            if (
+              isset($handler->value['lat_north_east'])
+              && $handler->value['lat_north_east'] !== ""
+              && isset($handler->value['lng_north_east'])
+              && $handler->value['lng_north_east'] !== ""
+              && isset($handler->value['lat_south_west'])
+              && $handler->value['lat_south_west'] !== ""
+              && isset($handler->value['lng_south_west'])
+              && $handler->value['lng_south_west'] !== ""
+            ) {
+              $centre = [
+                'lat_north_east' => (float) $handler->value['lat_north_east'],
+                'lng_north_east' => (float) $handler->value['lng_north_east'],
+                'lat_south_west' => (float) $handler->value['lat_south_west'],
+                'lng_south_west' => (float) $handler->value['lng_south_west'],
+              ];
+
+              $centre['behavior'] = 'fitboundaries';
+            }
+            break;
+          }
       }
     }
 
-    $build['#centre'] = $this->mapCenterManager->getCenterValue($this->options['centre']);
-
-    if ($this->view->getRequest()->get('geolocation_common_map_dynamic_view')) {
-      $build['#centre'] = [
-        'behavior' => 'preserve',
-      ];
+    if (!empty($centre)) {
+      $build['#centre'] = $centre ?: ['lat' => 0, 'lng' => 0];
     }
-
-    $build = $this->mapProviderManager
-      ->createInstance($this->options['map_provider_id'], $this->options['map_provider_settings'])
-      ->alterCommonMap($build, $this->options['map_provider_settings'], ['view' => $this]);
 
     return $build;
   }
@@ -244,12 +370,12 @@ class CommonMapBase extends StylePluginBase {
   protected function getLocationsFromRow(ResultRow $row) {
     $locations = [];
 
-    if (!empty($this->titleField)) {
-      if (!empty($this->rendered_fields[$row->index][$this->titleField])) {
-        $title_build = $this->rendered_fields[$row->index][$this->titleField];
+    if (!empty($title_field)) {
+      if (!empty($this->rendered_fields[$row->index][$title_field])) {
+        $title_build = $this->rendered_fields[$row->index][$title_field];
       }
-      elseif (!empty($this->view->field[$this->titleField])) {
-        $title_build = $this->view->field[$this->titleField]->render($row);
+      elseif (!empty($this->view->field[$title_field])) {
+        $title_build = $this->view->field[$title_field]->render($row);
       }
     }
 
@@ -268,33 +394,39 @@ class CommonMapBase extends StylePluginBase {
       $icon_field_handler = $this->view->field[$this->iconField];
       if (!empty($icon_field_handler)) {
         $image_items = $icon_field_handler->getItems($row);
-        if (!empty($image_items[0]['rendered']['#item']->entity)) {
-          $file_uri = $image_items[0]['rendered']['#item']->entity->getFileUri();
+        if (!empty($image_items[0])) {
+          /** @var \Drupal\image\Plugin\Field\FieldType\ImageItem $item */
+          $item = $image_items[0]['rendered']['#item'];
+          if (!empty($item->entity)) {
+            $file_uri = $item->entity->getFileUri();
 
-          $style = NULL;
-          if (!empty($image_items[0]['rendered']['#image_style'])) {
             /** @var \Drupal\image\Entity\ImageStyle $style */
             $style = ImageStyle::load($image_items[0]['rendered']['#image_style']);
-          }
-
-          if (!empty($style)) {
-            $icon_url = file_url_transform_relative($style->buildUrl($file_uri));
-          }
-          else {
-            $icon_url = file_url_transform_relative(file_create_url($file_uri));
+            if (!empty($style)) {
+              $icon_url = file_url_transform_relative($style->buildUrl($file_uri));
+            }
+            else {
+              $icon_url = file_url_transform_relative(file_create_url($file_uri));
+            }
           }
         }
       }
     }
     elseif (!empty($this->options['marker_icon_path'])) {
       $icon_token_uri = $this->viewsTokenReplace($this->options['marker_icon_path'], $this->rowTokens[$row->index]);
-      $icon_token_uri = preg_replace('/\s+/', '', $icon_token_uri);
       $icon_url = file_url_transform_relative(file_create_url($icon_token_uri));
     }
 
-    $data_provider = $this->dataProviderManager->createInstance($this->options['data_provider_id'], $this->options['data_provider_settings']);
+    $positions = [];
+    foreach ($this->dataProviderManager->getDefinitions() as $dataProviderId => $dataProviderDefinition) {
+      /** @var \Drupal\geolocation\DataProviderInterface $dataProvider */
+      $dataProvider = $this->dataProviderManager->createInstance($dataProviderId);
+      if ($dataProvider->isCommonMapViewsStyleOption($this->view->field[$this->options['geolocation_field']])) {
+        $positions = array_merge($positions, $dataProvider->getPositionsFromViewsRow($this->view->field[$this->options['geolocation_field']], $row));
+      }
+    }
 
-    foreach ($data_provider->getPositionsFromViewsRow($row, $this->view->field[$this->options['geolocation_field']]) as $position) {
+    foreach ($positions as $position) {
       $location = [
         '#type' => 'geolocation_map_location',
         'content' => $this->view->rowPlugin->render($row),
@@ -311,8 +443,7 @@ class CommonMapBase extends StylePluginBase {
       }
 
       if ($this->options['marker_row_number']) {
-        $markerOffset = $this->view->pager->getCurrentPage() * $this->view->pager->getItemsPerPage();
-        $location['#label'] = (int) $markerOffset + (int) $row->index + 1;
+        $location['#marker_label'] = (int) $row->index + 1;
       }
 
       $locations[] = $location;
@@ -328,17 +459,12 @@ class CommonMapBase extends StylePluginBase {
     $options = parent::defineOptions();
 
     $options['even_empty'] = ['default' => '1'];
-
     $options['geolocation_field'] = ['default' => ''];
-    $options['data_provider_id'] = ['default' => 'geolocation_field_provider'];
-    $options['data_provider_settings'] = ['default' => []];
-
     $options['title_field'] = ['default' => ''];
     $options['icon_field'] = ['default' => ''];
-    $options['id_field'] = ['default' => ''];
-
     $options['marker_scroll_to_result'] = ['default' => 0];
     $options['marker_row_number'] = ['default' => FALSE];
+    $options['id_field'] = ['default' => ''];
     $options['dynamic_map'] = [
       'contains' => [
         'enabled' => ['default' => 0],
@@ -348,11 +474,8 @@ class CommonMapBase extends StylePluginBase {
         'views_refresh_delay' => ['default' => '1200'],
       ],
     ];
-    $options['centre'] = ['default' => []];
+    $options['centre'] = ['default' => ''];
     $options['marker_icon_path'] = ['default' => ''];
-
-    $options['map_provider_id'] = ['default' => ''];
-    $options['map_provider_settings'] = ['default' => []];
 
     return $options;
   }
@@ -361,23 +484,11 @@ class CommonMapBase extends StylePluginBase {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
-    $map_provider_options = $this->mapProviderManager->getMapProviderOptions();
-
-    if (empty($map_provider_options)) {
-      $form = [
-        '#type' => 'html_tag',
-        '#tag' => 'span',
-        '#value' => t("No map provider found."),
-      ];
-      return;
-    }
 
     parent::buildOptionsForm($form, $form_state);
 
     $labels = $this->displayHandler->getFieldLabels();
     $geo_options = [];
-    /** @var \Drupal\geolocation\DataProviderInterface[] $data_providers */
-    $data_providers = [];
     $title_options = [];
     $icon_options = [];
     $id_options = [];
@@ -385,16 +496,13 @@ class CommonMapBase extends StylePluginBase {
     $fields = $this->displayHandler->getHandlers('field');
     /** @var \Drupal\views\Plugin\views\field\FieldPluginBase[] $fields */
     foreach ($fields as $field_name => $field) {
-      $data_provider_settings = [];
-      if (
-        $this->options['geolocation_field'] == $field_name
-        && !empty($this->options['data_provider_settings'])
-      ) {
-        $data_provider_settings = $this->options['data_provider_settings'];
-      }
-      if ($data_provider = $this->dataProviderManager->getDataProviderByViewsField($field, $data_provider_settings)) {
-        $geo_options[$field_name] = $field->adminLabel();
-        $data_providers[$field_name] = $data_provider;
+      foreach ($this->dataProviderManager->getDefinitions() as $dataProviderId => $dataProviderDefinition) {
+        /** @var \Drupal\geolocation\DataProviderInterface $dataProvider */
+        $dataProvider = $this->dataProviderManager->createInstance($dataProviderId);
+
+        if ($dataProvider->isCommonMapViewsStyleOption($field)) {
+          $geo_options[$field_name] = $labels[$field_name];
+        }
       }
 
       if (!empty($field->options['type']) && $field->options['type'] == 'image') {
@@ -417,55 +525,7 @@ class CommonMapBase extends StylePluginBase {
       '#description' => $this->t("The source of geodata for each entity."),
       '#options' => $geo_options,
       '#required' => TRUE,
-      '#ajax' => [
-        'callback' => [get_class($this->dataProviderManager), 'addDataProviderSettingsFormAjax'],
-        'wrapper' => 'data-provider-settings',
-        'effect' => 'fade',
-      ],
     ];
-
-    $data_provider = NULL;
-
-    $form_state_data_provider_id = NestedArray::getValue($form_state->getUserInput(), ['style_options', 'geolocation_field']);
-    if (
-      !empty($form_state_data_provider_id)
-      && !empty($data_providers[$form_state_data_provider_id])
-    ) {
-      $data_provider = $data_providers[$form_state_data_provider_id];
-    }
-    elseif (!empty($data_providers[$this->options['geolocation_field']])) {
-      $data_provider = $data_providers[$this->options['geolocation_field']];
-    }
-    elseif ($data_providers[reset($geo_options)]) {
-      $data_provider = $data_providers[reset($geo_options)];
-    }
-    else {
-      return;
-    }
-
-    $form['data_provider_id'] = [
-      '#type' => 'value',
-      '#value' => $data_provider->getPluginId(),
-    ];
-
-    $form['data_provider_settings'] = [
-      '#type' => 'container',
-    ];
-
-    if ($data_provider) {
-      $form['data_provider_settings'] = $data_provider->getSettingsForm(
-        $this->options['data_provider_settings'],
-        [
-          'style_options',
-          'map_provider_settings',
-        ]
-      );
-    }
-
-    $form['data_provider_settings'] = array_replace($form['data_provider_settings'], [
-      '#prefix' => '<div id="data-provider-settings">',
-      '#suffix' => '</div>',
-    ]);
 
     $form['title_field'] = [
       '#title' => $this->t('Title source field'),
@@ -481,7 +541,7 @@ class CommonMapBase extends StylePluginBase {
     /*
      * Dynamic map handling.
      */
-    if (!empty($map_update_target_options)) {
+    if (!empty($map_update_target_options['map_update_options'])) {
       $form['dynamic_map'] = [
         '#title' => $this->t('Dynamic Map'),
         '#type' => 'fieldset',
@@ -498,7 +558,7 @@ class CommonMapBase extends StylePluginBase {
         '#type' => 'select',
         '#default_value' => $this->options['dynamic_map']['update_handler'],
         '#description' => $this->t("The map has to know how to feed back the update boundary data to the view."),
-        '#options' => $map_update_target_options,
+        '#options' => $map_update_target_options['map_update_options'],
         '#states' => [
           'visible' => [
             ':input[name="style_options[dynamic_map][enabled]"]' => ['checked' => TRUE],
@@ -560,11 +620,106 @@ class CommonMapBase extends StylePluginBase {
     /*
      * Centre handling.
      */
-    $form['centre'] = $this->mapCenterManager->getCenterOptionsForm((array) $this->options['centre'], ['views_style' => $this]);
+    $options = [
+      'fit_bounds' => $this->t('Automatically fit map bounds to results. Disregards any set center or zoom.'),
+      'first_row' => $this->t('Use first row as centre.'),
+      'fixed_value' => $this->t('Provide fixed latitude and longitude.'),
+      'client_location' => $this->t('Ask client for location via HTML5 geolocation API.'),
+    ];
+
+    $options += $map_update_target_options['map_update_options'];
+
+    $form['centre'] = [
+      '#type' => 'table',
+      '#prefix' => $this->t('<h3>Centre options</h3>Please note: Each option will, if it can be applied, supersede any following option.'),
+      '#header' => [
+        $this->t('Enable'),
+        $this->t('Option'),
+        $this->t('settings'),
+        [
+          'data' => $this->t('Settings'),
+          'colspan' => '1',
+        ],
+      ],
+      '#attributes' => ['id' => 'geolocation-centre-options'],
+      '#tabledrag' => [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'geolocation-centre-option-weight',
+        ],
+      ],
+    ];
+
+    foreach ($options as $id => $label) {
+      $weight = isset($this->options['centre'][$id]['weight']) ? $this->options['centre'][$id]['weight'] : 0;
+      $form['centre'][$id]['#weight'] = $weight;
+
+      $form['centre'][$id]['enable'] = [
+        '#type' => 'checkbox',
+        '#default_value' => isset($this->options['centre'][$id]['enable']) ? $this->options['centre'][$id]['enable'] : TRUE,
+      ];
+
+      $form['centre'][$id]['option'] = [
+        '#markup' => $label,
+      ];
+
+      // Add tabledrag supprt.
+      $form['centre'][$id]['#attributes']['class'][] = 'draggable';
+      $form['centre'][$id]['weight'] = [
+        '#type' => 'weight',
+        '#title' => $this->t('Weight for @option', ['@option' => $label]),
+        '#title_display' => 'invisible',
+        '#size' => 4,
+        '#default_value' => $weight,
+        '#attributes' => ['class' => ['geolocation-centre-option-weight']],
+      ];
+    }
+
+    $form['centre']['client_location']['settings'] = [
+      '#type' => 'container',
+      'update_map' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Additionally feed clients location back to view via dynamic map settings?'),
+        '#default_value' => isset($this->options['centre']['client_location']['settings']['update_map']) ? $this->options['centre']['client_location']['settings']['update_map'] : FALSE,
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="style_options[centre][client_location][enable]"]' => ['checked' => TRUE],
+          ':input[name="style_options[dynamic_map][enabled]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    $form['centre']['fixed_value']['settings'] = [
+      '#type' => 'container',
+      'latitude' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Latitude'),
+        '#default_value' => isset($this->options['centre']['fixed_value']['settings']['latitude']) ? $this->options['centre']['fixed_value']['settings']['latitude'] : '',
+        '#size' => 60,
+        '#maxlength' => 128,
+      ],
+      'longitude' => [
+        '#type' => 'textfield',
+        '#title' => $this->t('Longitude'),
+        '#default_value' => isset($this->options['centre']['fixed_value']['settings']['longitude']) ? $this->options['centre']['fixed_value']['settings']['longitude'] : '',
+        '#size' => 60,
+        '#maxlength' => 128,
+      ],
+      '#states' => [
+        'visible' => [
+          ':input[name="style_options[centre][fixed_value][enable]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    uasort($form['centre'], [SortArray::class, 'sortByWeightProperty']);
 
     /*
      * Advanced settings
      */
+
     $form['advanced_settings'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Advanced settings'),
@@ -641,56 +796,10 @@ class CommonMapBase extends StylePluginBase {
       '#default_value' => $this->options['marker_row_number'],
     ];
 
-    $form['map_provider_id'] = [
-      '#type' => 'select',
-      '#options' => $map_provider_options,
-      '#title' => $this->t('Map Provider'),
-      '#default_value' => $this->options['map_provider_id'],
-      '#ajax' => [
-        'callback' => [get_class($this->mapProviderManager), 'addSettingsFormAjax'],
-        'wrapper' => 'map-provider-settings',
-        'effect' => 'fade',
-      ],
-    ];
-
-    $form['map_provider_settings'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'span',
-      '#value' => t("No settings available."),
-    ];
-
-    $map_provider_id = NestedArray::getValue($form_state->getUserInput(), ['style_options', 'map_provider_id']);
-    if (empty($map_provider_id)) {
-      $map_provider_id = $this->options['map_provider_id'];
+    if ($this->mapProvider) {
+      $mapProviderSettings = empty($this->options[$this->mapProviderSettingsFormId]) ? [] : $this->options[$this->mapProviderSettingsFormId];
+      $form[$this->mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm($mapProviderSettings, ['style_options', $this->mapProviderSettingsFormId]);
     }
-    if (empty($map_provider_id)) {
-      $map_provider_id = key($map_provider_options);
-    }
-
-    $map_provider_settings = NestedArray::getValue($form_state->getUserInput(), ['style_options', 'map_provider_settings']);
-    if (empty($map_provider_settings)) {
-      $map_provider_settings = $this->options['map_provider_settings'];
-    }
-
-    if (!empty($map_provider_id)) {
-      $form['map_provider_settings'] = $this->mapProviderManager
-        ->createInstance($map_provider_id, $map_provider_settings)
-        ->getSettingsForm(
-          $map_provider_settings,
-          [
-            'style_options',
-            'map_provider_settings',
-          ]
-        );
-    }
-
-    $form['map_provider_settings'] = array_replace(
-      $form['map_provider_settings'],
-      [
-        '#prefix' => '<div id="map-provider-settings">',
-        '#suffix' => '</div>',
-      ]
-    );
   }
 
 }

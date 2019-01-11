@@ -7,7 +7,7 @@ plugin.plugin_configuration.geolocation.map_feature.drawing:
       label: 'Settings'
       mapping:
         polyline:
-          type: boolean
+          type: string
           label: 'Draw polyline'
         strokeColor:
           type: string
@@ -19,10 +19,10 @@ plugin.plugin_configuration.geolocation.map_feature.drawing:
           type: string
           label: 'strokeWeight'
         geodesic:
-          type: boolean
+          type: string
           label: 'Geodesic'
         polygon:
-          type: boolean
+          type: string
           label: 'Draw polygon'
         fillColor:
           type: string
@@ -46,7 +46,7 @@ plugin.plugin_configuration.geolocation.map_feature.marker_clusterer:
           type: string
           label: 'Styles'
         max_zoom:
-          type: integer
+          type: string
           label: 'Max Zoom'
 
 plugin.plugin_configuration.geolocation.map_feature.context_popup:
@@ -82,13 +82,13 @@ plugin.plugin_configuration.geolocation.map_feature.marker_infowindow:
       label: 'Settings'
       mapping:
         info_window_solitary:
-          type: boolean
+          type: integer
           label: 'Show only one window at a time'
         disable_auto_pan:
-          type: boolean
+          type: integer
           label: 'Do not move map on window open'
         info_auto_display:
-          type: boolean
+          type: integer
           label: 'Show info window on map start'
 
 plugin.plugin_configuration.geolocation.map_feature.marker_icon:

@@ -1,11 +1,10 @@
 /**
  * @typedef {Object} MarkerInfoWindowSettings
  *
- * @extends {GeolocationMapFeatureSettings}
- *
- * @property {Boolean} infoAutoDisplay
- * @property {Boolean} disableAutoPan
- * @property {Boolean} infoWindowSolitary
+ * @property {String} enable
+ * @property {bool} infoAutoDisplay
+ * @property {bool} disableAutoPan
+ * @property {bool} infoWindowSolitary
  */
 
 /**
@@ -33,54 +32,69 @@
    */
   Drupal.behaviors.geolocationMarkerInfoWindow = {
     attach: function (context, drupalSettings) {
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'marker_infowindow',
+      $.each(
+        drupalSettings.geolocation.maps,
 
         /**
-         * @param {GeolocationGoogleMap} map - Current map.
-         * @param {MarkerInfoWindowSettings} featureSettings - Settings for current feature.
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {MarkerInfoWindowSettings} mapSettings.marker_infowindow - settings for current map
          */
-        function (map, featureSettings) {
-          map.addMarkerAddedCallback(function (currentMarker) {
-            if (typeof (currentMarker.locationWrapper) === 'undefined') {
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.marker_infowindow !== 'undefined'
+            && mapSettings.marker_infowindow.enable
+          ) {
+
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (!map) {
               return;
             }
 
-            var content = currentMarker.locationWrapper.find('.location-content');
-
-            if (content.length < 1) {
+            if (map.wrapper.hasClass('geolocation-marker-infowindow-processed')) {
               return;
             }
-            content = content.html();
 
-            // Set the info popup text.
-            var currentInfoWindow = new google.maps.InfoWindow({
-              content: content.toString(),
-              disableAutoPan: featureSettings.disableAutoPan
-            });
+            map.wrapper.addClass('geolocation-marker-infowindow-processed');
 
-            currentMarker.addListener('click', function () {
-              if (featureSettings.infoWindowSolitary) {
-                if (typeof map.infoWindow !== 'undefined') {
-                  map.infoWindow.close();
-                }
-                map.infoWindow = currentInfoWindow;
+            map.addMarkerAddedCallback(function (currentMarker) {
+              if (typeof (currentMarker.locationWrapper) === 'undefined') {
+                return;
               }
-              currentInfoWindow.open(map.googleMap, currentMarker);
-            });
 
-            if (featureSettings.infoAutoDisplay) {
-              google.maps.event.addListenerOnce(map.googleMap, 'tilesloaded', function () {
-                google.maps.event.trigger(currentMarker, 'click');
+              var content = currentMarker.locationWrapper.find('.location-content');
+
+              if (content.length < 1) {
+                return;
+              }
+              content = content.html();
+
+              // Set the info popup text.
+              var currentInfoWindow = new google.maps.InfoWindow({
+                content: content,
+                disableAutoPan: mapSettings.marker_infowindow.disableAutoPan
               });
-            }
-          });
 
-          return true;
-        },
-        drupalSettings
+              currentMarker.addListener('click', function () {
+                if (mapSettings.marker_infowindow.infoWindowSolitary) {
+                  if (typeof map.infoWindow !== 'undefined') {
+                    map.infoWindow.close();
+                  }
+                  map.infoWindow = currentInfoWindow;
+                }
+                currentInfoWindow.open(map.googleMap, currentMarker);
+              });
+
+              if (mapSettings.marker_infowindow.infoAutoDisplay) {
+                google.maps.event.addListenerOnce(map.googleMap, 'tilesloaded', function () {
+                  google.maps.event.trigger(currentMarker, 'click');
+                });
+              }
+            });
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 })(jQuery, Drupal);

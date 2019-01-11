@@ -1,3 +1,9 @@
+/**
+ * @typedef {Object} ControlGeocoderSettings
+ *
+ * @property {String} enable
+ */
+
 (function ($, Drupal) {
 
   'use strict';
@@ -12,20 +18,35 @@
    */
   Drupal.behaviors.geolocationControlGeocoder = {
     attach: function (context, drupalSettings) {
+      $.each(
+        drupalSettings.geolocation.maps,
 
-      Drupal.geolocation.executeFeatureOnAllMaps(
-        'control_geocoder',
-        function (map, featureSettings) {
-          Drupal.geolocation.geocoder.addResultCallback(function(address) {
-            map.setCenterByCoordinates({lat: address.geometry.location.lat(), lng: address.geometry.location.lng()}, undefined, 'google_control_geocoder');
-          }, map.id);
+        /**
+         * @param {String} mapId - ID of current map
+         * @param {Object} mapSettings - settings for current map
+         * @param {ControlGeocoderSettings} mapSettings.control_geocoder - settings for current map
+         */
+        function (mapId, mapSettings) {
+          if (
+            typeof mapSettings.control_geocoder !== 'undefined'
+            && mapSettings.control_geocoder.enable
+          ) {
 
-          return true;
-        },
-        drupalSettings
+            var map = Drupal.geolocation.getMapById(mapId);
+
+            if (map.wrapper.hasClass('geolocation-control-geocoder-processed')) {
+              return;
+            }
+
+            map.wrapper.addClass('geolocation-control-geocoder-processed');
+
+            Drupal.geolocation.geocoder.addResultCallback(function(address) {
+              map.setCenterByCoordinates({lat: address.geometry.location.lat(), lng: address.geometry.location.lng()});
+            }, mapId);
+          }
+        }
       );
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
 })(jQuery, Drupal);

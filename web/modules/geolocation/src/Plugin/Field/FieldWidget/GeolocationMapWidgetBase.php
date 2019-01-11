@@ -2,7 +2,6 @@
 
 namespace Drupal\geolocation\Plugin\Field\FieldWidget;
 
-use Drupal\geolocation\MapCenterManager;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\Html;
@@ -32,14 +31,14 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
    *
    * @var string
    */
-  static protected $mapProviderId = FALSE;
+  protected $mapProviderId = FALSE;
 
   /**
    * Map Provider Settings Form ID.
    *
    * @var string
    */
-  static protected $mapProviderSettingsFormId = 'map_settings';
+  protected $mapProviderSettingsFormId = FALSE;
 
   /**
    * Map Provider.
@@ -47,13 +46,6 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
    * @var \Drupal\geolocation\MapProviderInterface
    */
   protected $mapProvider = NULL;
-
-  /**
-   * Map center manager.
-   *
-   * @var \Drupal\geolocation\MapCenterManager
-   */
-  protected $mapCenterManager = NULL;
 
   /**
    * Constructs a WidgetBase object.
@@ -70,19 +62,19 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
    *   Any third party settings.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
-   * @param \Drupal\geolocation\MapCenterManager $map_center_manager
-   *   Map center manager.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityFieldManagerInterface $entity_field_manager, MapCenterManager $map_center_manager) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityFieldManagerInterface $entity_field_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
 
     $this->entityFieldManager = $entity_field_manager;
-    $this->mapCenterManager = $map_center_manager;
 
-    if (!empty(static::$mapProviderId)) {
-      $this->mapProvider = \Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider(static::$mapProviderId);
+    if (!empty($this->mapProviderId)) {
+      $this->mapProvider = \Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProvider($this->mapProviderId);
     }
 
+    if (empty($this->mapProviderSettingsFormId)) {
+      $this->mapProviderSettingsFormId = $this->mapProviderId . '_settings';
+    }
   }
 
   /**
@@ -95,8 +87,7 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('entity_field.manager'),
-      $container->get('plugin.manager.geolocation.mapcenter')
+      $container->get('entity_field.manager')
     );
   }
 
@@ -117,12 +108,12 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
    */
   public static function defaultSettings() {
     $settings = [
-      'centre' => [],
+      'default_longitude' => NULL,
+      'default_latitude' => NULL,
       'auto_client_location' => FALSE,
       'auto_client_location_marker' => FALSE,
       'allow_override_map_settings' => FALSE,
     ];
-    $settings[static::$mapProviderSettingsFormId] = \Drupal::service('plugin.manager.geolocation.mapprovider')->getMapProviderDefaultSettings(static::$mapProviderId);
     $settings += parent::defaultSettings();
 
     return $settings;
@@ -134,14 +125,14 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
   public function getSettings() {
     $settings = parent::getSettings();
     $map_settings = [];
-    if (!empty($settings[static::$mapProviderSettingsFormId])) {
-      $map_settings = $settings[static::$mapProviderSettingsFormId];
+    if (!empty($settings[$this->mapProviderSettingsFormId])) {
+      $map_settings = $settings[$this->mapProviderSettingsFormId];
     }
 
     $settings = NestedArray::mergeDeep(
       $settings,
       [
-        static::$mapProviderSettingsFormId => $this->mapProvider->getSettings($map_settings),
+        $this->mapProviderSettingsFormId => $this->mapProvider->getSettings($map_settings),
       ]
     );
 
@@ -155,11 +146,23 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     $settings = $this->getSettings();
     $element = [];
 
-    $element['centre'] = $this->mapCenterManager->getCenterOptionsForm((array) $settings['centre'], ['widget' => $this]);
+    $element['default_longitude'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default Longitude'),
+      '#description' => $this->t('The default center point, before a value is set.'),
+      '#default_value' => $settings['default_longitude'],
+    ];
+
+    $element['default_latitude'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Default Latitude'),
+      '#description' => $this->t('The default center point, before a value is set.'),
+      '#default_value' => $settings['default_latitude'],
+    ];
 
     $element['auto_client_location_marker'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Automatically set marker to client location if available.'),
+      '#title' => $this->t('Automatically set marker to client location as well'),
       '#default_value' => $settings['auto_client_location_marker'],
     ];
 
@@ -170,14 +173,14 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     ];
 
     if ($this->mapProvider) {
-      $element[static::$mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm(
-        $settings[static::$mapProviderSettingsFormId],
+      $element[$this->mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm(
+        $settings[$this->mapProviderSettingsFormId],
         [
           'fields',
           $this->fieldDefinition->getName(),
           'settings_edit_form',
           'settings',
-          static::$mapProviderSettingsFormId,
+          $this->mapProviderSettingsFormId,
         ]
       );
     }
@@ -192,6 +195,11 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     $summary = [];
     $settings = $this->getSettings();
 
+    $summary[] = $this->t('Default center longitude @default_longitude and latitude @default_latitude', [
+      '@default_longitude' => $settings['default_longitude'],
+      '@default_latitude' => $settings['default_latitude'],
+    ]);
+
     if (!empty($settings['auto_client_location_marker'])) {
       $summary[] = $this->t('Will set client location marker automatically by default');
     }
@@ -200,7 +208,7 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       $summary[] = $this->t('Users will be allowed to override the map settings for each content.');
     }
 
-    $map_provider_settings = empty($settings[static::$mapProviderSettingsFormId]) ? [] : $settings[static::$mapProviderSettingsFormId];
+    $map_provider_settings = empty($settings[$this->mapProviderSettingsFormId]) ? [] : $settings[$this->mapProviderSettingsFormId];
 
     $summary = array_replace_recursive($summary, $this->mapProvider->getSettingsSummary($map_provider_settings));
 
@@ -213,10 +221,10 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $default_field_values = FALSE;
 
-    if (!empty($this->fieldDefinition->getDefaultValueLiteral()[$delta])) {
+    if (!empty($this->fieldDefinition->getDefaultValueLiteral()[0])) {
       $default_field_values = [
-        'lat' => $this->fieldDefinition->getDefaultValueLiteral()[$delta]['lat'],
-        'lng' => $this->fieldDefinition->getDefaultValueLiteral()[$delta]['lng'],
+        'lat' => $this->fieldDefinition->getDefaultValueLiteral()[0]['lat'],
+        'lng' => $this->fieldDefinition->getDefaultValueLiteral()[0]['lng'],
       ];
     }
 
@@ -254,18 +262,18 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
       && $this->getSetting('allow_override_map_settings')
       && $this->mapProvider
     ) {
-      $overriden_map_settings = empty($this->getSetting(static::$mapProviderSettingsFormId)) ? [] : $this->getSetting(static::$mapProviderSettingsFormId);
+      $overriden_map_settings = empty($this->getSetting($this->mapProviderSettingsFormId)) ? [] : $this->getSetting($this->mapProviderSettingsFormId);
 
-      if (!empty($items->get(0)->getValue()['data']['map_provider_settings'])) {
-        $overriden_map_settings = $items->get(0)->getValue()['data']['map_provider_settings'];
+      if (!empty($items->get(0)->getValue()['data'][$this->mapProviderSettingsFormId])) {
+        $overriden_map_settings = $items->get(0)->getValue()['data'][$this->mapProviderSettingsFormId];
       }
 
-      $element[static::$mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm(
+      $element[$this->mapProviderSettingsFormId] = $this->mapProvider->getSettingsForm(
         $overriden_map_settings,
         [
           $this->fieldDefinition->getName(),
           0,
-          static::$mapProviderSettingsFormId,
+          $this->mapProviderSettingsFormId,
         ]
       );
     }
@@ -324,46 +332,20 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     $element['map'] = [
       '#type' => 'geolocation_map',
       '#weight' => -10,
-      '#settings' => $settings[static::$mapProviderSettingsFormId],
+      '#settings' => $settings[$this->mapProviderSettingsFormId],
       '#id' => $id . '-map',
-      '#maptype' => static::$mapProviderId,
+      '#maptype' => $this->mapProviderId,
       '#context' => ['widget' => $this],
-      '#centre' => $this->mapCenterManager->getCenterValue($settings['centre']),
-      'locations' => [],
     ];
-
-    foreach ($items as $item) {
-      /** @var \Drupal\geolocation\Plugin\Field\FieldType\GeolocationItem $item */
-      $element['map']['locations'][] = [
-        '#type' => 'geolocation_map_location',
-        '#position' => [
-          'lat' => $item->get('lat')->getValue(),
-          'lng' => $item->get('lng')->getValue(),
-        ],
-      ];
-    }
 
     if (
       $this->getSetting('allow_override_map_settings')
-      && !empty($items->get(0)->getValue()['data']['map_provider_settings'])
+      && !empty($items->get(0)->getValue()['data'][$this->mapProviderSettingsFormId])
     ) {
-      $element['map']['#settings'] = $items->get(0)->getValue()['data']['map_provider_settings'];
+      $element['map']['#settings'] = $items->get(0)->getValue()['data'][$this->mapProviderSettingsFormId];
     }
 
     return $element;
-  }
-
-  /**
-   * Return map provider.
-   *
-   * @return bool|\Drupal\geolocation\MapProviderInterface
-   *   Map provder or false.
-   */
-  public function getMapProvider() {
-    if ($this->mapProvider) {
-      return $this->mapProvider;
-    }
-    return FALSE;
   }
 
   /**
@@ -373,20 +355,13 @@ abstract class GeolocationMapWidgetBase extends WidgetBase implements ContainerF
     $values = parent::massageFormValues($values, $form, $form_state);
 
     if (!empty($this->settings['allow_override_map_settings'])) {
-      if (!empty($values[0][static::$mapProviderSettingsFormId])) {
-        $values[0]['data']['map_provider_settings'] = $values[0][static::$mapProviderSettingsFormId];
-        unset($values[0][static::$mapProviderSettingsFormId]);
+      if (!empty($values[0][$this->mapProviderSettingsFormId])) {
+        $values[0]['data'][$this->mapProviderSettingsFormId] = $values[0][$this->mapProviderSettingsFormId];
+        unset($values[0][$this->mapProviderSettingsFormId]);
       }
     }
 
     return $values;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getControlPositions() {
-    return FALSE;
   }
 
 }

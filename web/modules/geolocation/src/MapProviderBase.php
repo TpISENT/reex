@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\Html;
 
 /**
  * Class MapProviderBase.
@@ -133,39 +132,44 @@ abstract class MapProviderBase extends PluginBase implements MapProviderInterfac
       '#description' => $this->t('Additional map settings provided by %map_provider', ['%map_provider' => $this->pluginDefinition['name']]),
     ];
 
-    $map_features = $this->mapFeatureManager->getMapFeaturesByMapType($this->getPluginId());
-
-    if (empty($map_features)) {
-      return $form;
-    }
-
     $form['map_features'] = [
       '#type' => 'table',
-      '#weight' => 100,
       '#prefix' => $this->t('<h3>Map Features</h3>'),
+      '#title' => 'title table',
+      '#description' => 'description table',
       '#header' => [
-        $this->t('Enable'),
+        [
+          'data' => $this->t('Enable'),
+          /*
+           This does not work as expected :( .
+           'sort' => 'asc',
+           'field' => 'enabled',
+          */
+        ],
         $this->t('Feature'),
         $this->t('Settings'),
-        $this->t('Weight'),
+        [
+          'data' => $this->t('Settings'),
+          'colspan' => '1',
+        ],
       ],
       '#tabledrag' => [
         [
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => 'geolocation-map-feature-option-weight',
+          'group' => 'geolocation-google-map-feature-option-weight',
         ],
       ],
     ];
     $form['map_features']['#element_validate'][] = [$this, 'validateMapFeatureForms'];
 
-    foreach ($map_features as $feature_id => $feature_definition) {
+    foreach ($this->mapFeatureManager->getMapFeaturesByMapType('google_maps') as $feature_id => $feature_definition) {
       $feature = $this->mapFeatureManager->getMapFeature($feature_id, []);
       if (empty($feature)) {
         continue;
       }
 
-      $feature_enable_id = Html::getUniqueId($feature_id . '_enabled');
+      $feature_enable_id = uniqid($feature_id . '_enabled');
       $weight = isset($settings['map_features'][$feature_id]['weight']) ? $settings['map_features'][$feature_id]['weight'] : 0;
 
       $form['map_features'][$feature_id] = [
@@ -193,7 +197,7 @@ abstract class MapProviderBase extends PluginBase implements MapProviderInterfac
           '#title_display' => 'invisible',
           '#size' => 4,
           '#default_value' => $weight,
-          '#attributes' => ['class' => ['geolocation-map-feature-option-weight']],
+          '#attributes' => ['class' => ['geolocation-google-map-feature-option-weight']],
         ],
       ];
 
@@ -272,20 +276,6 @@ abstract class MapProviderBase extends PluginBase implements MapProviderInterfac
     }
 
     return $render_array;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function alterCommonMap(array $render_array, array $map_settings, array $context) {
-    return $render_array;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getControlPositions() {
-    return [];
   }
 
 }

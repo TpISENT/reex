@@ -42,8 +42,7 @@
 
       });
 
-    },
-    detach: function (context, drupalSettings) {}
+    }
   };
 
   $('.geolocation-html5-button .clear').on('click', function (event) {
