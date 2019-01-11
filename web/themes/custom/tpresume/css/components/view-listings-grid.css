@@ -90,6 +90,10 @@
 .views-field-field-mt-lst-address-container {
   position: relative;
 }
+.views-field-field-resume-details-container {
+  position: relative;
+}
+
 .views-field-field-mt-lst-address-inner {
   font-size: 15px;
   line-height: 1.2;
@@ -97,6 +101,16 @@
   padding: 20px;
   text-align: center;
 }
+
+.views-field-field-resume-details-inner {
+  font-size: 15px;
+  line-height: 1.2;
+  color: #707070;
+  padding: 20px 5px;
+  text-align: center;
+}
+
+.views-field-field-resume-details-container .target-link,
 .views-field-field-mt-lst-address-container .target-link {
   position: absolute;
   top: 0;
@@ -106,7 +120,11 @@
 }
 @media (min-width: 1200px) {
   .views-field-field-mt-lst-address-inner {
-    width: 60%;
+    width: 90%;
+    margin: 0 auto;
+  }
+  .views-field-field-resume-details-inner{
+    width: 90%;
     margin: 0 auto;
   }
 }
